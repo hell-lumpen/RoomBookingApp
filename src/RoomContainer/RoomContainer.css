@@ -1,0 +1,36 @@
+/* MeetingRoomComponent.css */
+.meeting-room {
+    background-color: #f8f9fa; /* Светлый фон */
+    padding: 20px;
+    margin: 20px 0; /* Увеличил отступ между блоками */
+    border-radius: 15px;
+}
+
+.meeting-room h2 {
+    color: #0095DA; /* Цвет синего текста */
+    margin-bottom: 15px;
+}
+
+.booking-card {
+    background-color: #fff; /* Белый фон */
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 13px;
+}
+
+.booking-container :hover {
+    background-color: #f8f9fa;
+}
+
+.booking-card > div {
+    margin-bottom: 8px;
+}
+
+.booking-card > div:first-child {
+    font-weight: bold;
+    color: #343a40; /* Темный текст */
+}
+
+.booking-card > div:last-child {
+    color: #868e96; /* Серый текст */
+}
