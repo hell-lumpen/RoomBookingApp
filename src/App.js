@@ -4,6 +4,7 @@ import './App.css';
 import BookingRoomComponent from "./RoomContainer/RoomContainer";
 import RoomInfoBlockComponent from "./RoomInfoBlockComponent/RoomInfoBlockComponent";
 import NewBookingComponent from "./NewBookingComponent/NewBookingComponent";
+import AuthForm from "./AuthForm/AuthForm";
 
 const App = () => {
 
@@ -209,9 +210,30 @@ const App = () => {
                 return 'декабря';
         }
     }
+
+    const [isPopupOpen, setPopupOpen] = useState(false);
+
+    const openPopup = () => {
+        setPopupOpen(true);
+    };
+
+    const closePopup = () => {
+        setPopupOpen(false);
+    };
+
     return (
         <div>
             <div className="App">
+                <div className="login-button-container">
+                    <button className='login-button' onClick={openPopup}><span className="material-icons account_circle">account_circle</span>Войти</button>
+                </div>
+                {isPopupOpen && (
+                    <div className="popup-container">
+                        <div className="popup-content">
+                            <AuthForm onClose={closePopup} />
+                        </div>
+                    </div>
+                )}
                 <h1>Бронирование аудиторий IT-этажа</h1>
                 <div className='control-panel-container'>
                     <div className='date-container-main'>
