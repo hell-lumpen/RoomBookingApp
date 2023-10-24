@@ -1,4 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');
+/*@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');*/
+/*@import url('https://fonts.googleapis.com/css2?family=PT+Sans+Caption:wght@400;700&display=swap');*/
+/*@import url('https://fonts.googleapis.com/css2?family=Scada:wght@400;700&display=swap');*/
+@import url('https://fonts.googleapis.com/css2?family=Geologica:wght@200;400;500;900&display=swap');
 
 .App {
   max-width: 800px;
@@ -7,7 +10,15 @@
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
-  font-family: 'Roboto', sans-serif;
+  /*font-family: 'Roboto', sans-serif;*/
+  /*font-family: 'PT Sans Caption', sans-serif;*/
+  /*font-family: 'Scada', sans-serif;*/
+  font-family: 'Geologica', sans-serif;
+}
+
+div {
+  font-family: 'Geologica', sans-serif;
+  font-weight: 400;
 }
 
 .App h1 {
@@ -20,15 +31,12 @@ input{
   padding: 5px;
   box-shadow: 0 0 1px rgb(0,0,0, 0.5);
   border-radius: 10px;
-
   font-size: 20px;
-
-
-
-  /*font-size: 16px;*/
   outline: none;
   border: none;
   text-align: center;
+  font-family: 'Geologica', sans-serif;
+  font-weight: 200;
 }
 
 .material-icons {
@@ -60,7 +68,7 @@ input{
 .dfds {
   display: flex;
   align-items: center;
-  box-shadow: 0 0 2px rgb(0, 0, 0, 0.8);
+  /*box-shadow: 0 0 2px rgb(0, 0, 0, 0.8);*/
   border-radius: 20px;
   width: 25px;
   height: 25px;
@@ -69,10 +77,23 @@ input{
   outline: none;
   border: none;
   text-align: center;
+  cursor: pointer;
 }
 
 .arrow {
   margin: 0;
+  color: #0095DA;
+}
+
+.add-booking-button {
+  cursor: pointer;
+}
+
+.add_circle {
+  font-size: 20px;
+  margin-right: 10px;
+  color: #0095DA;
+  margin-bottom: 3px;
 }
 
 select{
@@ -85,11 +106,6 @@ select{
   text-align: center;
 }
 
-input {
-  font: 'Arial';
-}
-
-
 .Info{
   position: fixed;
   top:0;
@@ -100,52 +116,51 @@ input {
   animation: toGray 0.3s ease forwards reverse;
 }
 
-.new-booking-background-block{
-  position: fixed;
-  top:0;
-  bottom:0;
-  left: 0;
-  right: 0;
-  z-index: 1;
-  background: rgba(0,0,0,60%);
-
-}
-
-
 .control-panel-container{
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+  margin-left: 20px;
+  margin-right: 20px;
+}
 
-  margin-left: 5%;
+@media (max-width: 680px) {
+  .control-panel-container {
+    flex-direction: column;
+    align-items: center;
+    justify-items: flex-start;
+  }
+
+  .new-booking-button-container {
+    margin-top: 20px;
+  }
 }
 
 .date-container-main{
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
   width: max-content;
+  align-items: center;
 }
 
 .date-container-text{
-  font-weight: bold;
-  border-width: 1px;
-  /*background: red;*/
-
+  width: 200px;
+  cursor: pointer;
   text-align: center;
-  padding-left: 10px;
-  padding-right: 10px;
   position: relative;
   margin-top: 1px;
+  font-weight: 500;
 }
 
 .new-booking-button-container{
-
   background: none;
   border: none ;
-  font-weight: bold;
-  font-size: 18px;
-  margin-right: 5%;
+  font-family: 'Geologica', sans-serif;
+  font-weight: 500;
+  font-size: 16px;
+  align-items: center;
+  display: flex;
+  cursor: pointer;
 }
 
 

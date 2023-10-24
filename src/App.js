@@ -96,6 +96,12 @@ const App = () => {
     const fetchRoomData = () => {
         try {
             const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJpYXQiOjE2OTgwNzEzMzEsImV4cCI6MTY5ODY3NjEzMX0.trcNRuEYO7iQIJ-GWvA-ezDen6QKJG2AWwiwsnOBxjI';
+
+            var base64Url = token.split('.')[1];
+            var decoded = JSON.parse(window.atob(base64Url))
+
+            console.log(decoded);
+
             const headers = {
                 Authorization: 'Bearer ' + token,
             }
@@ -126,7 +132,7 @@ const App = () => {
             // );
 
             axios.get(
-                'http://127.0.0.1:8080/api/bookings?startTime=' + year + '-' + month + '-' + day + 'T00:00:00&endTime=' + year + '-' + month1 + '-' + day1 + 'T00:00:00',
+                'http://10.10.69.65:8080/api/bookings?startTime=' + year + '-' + month + '-' + day + 'T00:00:00&endTime=' + year + '-' + month1 + '-' + day1 + 'T00:00:00',
                 {headers}
             ).then(
                 (response) => {
@@ -178,54 +184,52 @@ const App = () => {
     const getMonth = () => {
         switch (dateResponse.getMonth()) {
             case(0):
-                return 'Января';
+                return 'января';
             case(1):
-                return 'Февраля';
+                return 'февраля';
             case(2):
-                return 'Марта';
+                return 'марта';
             case(3):
-                return 'Апреля';
+                return 'апреля';
             case(4):
-                return 'Мая';
+                return 'мая';
             case(5):
-                return 'Июня';
+                return 'июня';
             case(6):
-                return 'Июля';
+                return 'июля';
             case(7):
-                return 'Августа';
+                return 'августа';
             case(8):
-                return 'Сентября';
+                return 'сентября';
             case(9):
-                return 'Октября';
+                return 'октября';
             case(10):
-                return 'Ноября';
+                return 'ноября';
             case(11):
-                return 'Декабря';
+                return 'декабря';
         }
     }
-
     return (
-        <>
+        <div>
             <div className="App">
-                <h1>Бронирование аудиторий </h1>
+                <h1>Бронирование аудиторий IT-этажа</h1>
                 <div className='control-panel-container'>
                     <div className='date-container-main'>
                         <button className='dfds' onClick={backDayClick}>
                             <span className="material-icons arrow">arrow_back_ios</span>
                         </button>
 
-                        <div onClick={todayDayClick} className='date-container-text'>{dateResponse.getDate()} {getMonth()}</div>
+                        <div onClick={todayDayClick} className='date-container-text'>{['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'][dateResponse.getDay()]}, {dateResponse.getDate()} {getMonth()}</div>
 
                         <button className='dfds' onClick={() => {nextDayClick()}}>
                             <span className="material-icons arrow">arrow_forward_ios</span>
                         </button>
                     </div>
-                    <button className='new-booking-button-container' onClick={()=>{
-                        setNewBooking(false);
-                    }}>Забронировать</button>
-
-
-
+                    <div className="add-booking-button">
+                        <button className='new-booking-button-container' onClick={()=>{
+                            setNewBooking(false);
+                        }}><span className="material-icons add_circle">add_circle</span>Забронировать</button>
+                    </div>
                 </div>
 
                 {roomDataArray.map((roomData, index) => (
@@ -245,7 +249,7 @@ const App = () => {
                 <NewBookingComponent call_function={setNewBooking}/>
             </div>
 
-        </>
+        </div>
 
     );
 };

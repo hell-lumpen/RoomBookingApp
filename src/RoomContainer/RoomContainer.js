@@ -8,8 +8,11 @@ function getTime(date){
 }
 
 const BookingRoomComponent = ({funcClickDiv, updateDataInfoBlock, name, bookings}) => {
+    console.log("name: " + name)
     return (
-        <div className="meeting-room">
+        <div>
+          {name ? (
+              <div className="meeting-room">
             <h2>{name}</h2>
             <div className="booking-container">
                 {bookings.map(booking => (
@@ -30,6 +33,12 @@ const BookingRoomComponent = ({funcClickDiv, updateDataInfoBlock, name, bookings
                     </div>
                 ))}
             </div>
+        </div>
+          ) : (
+              <div>
+                Бронирования на этот день отсутсвуют
+              </div>
+          )}
         </div>
     );
 };

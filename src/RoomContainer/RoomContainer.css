@@ -9,6 +9,7 @@
 .meeting-room h2 {
     color: #0095DA; /* Цвет синего текста */
     margin-bottom: 15px;
+    font-weight: 500;
 }
 
 .booking-card {
@@ -24,7 +25,7 @@
 
 .booking-info {
     margin-bottom: 15px;
-    font-weight: 700;
+    font-weight: 500;
 }
 
 .icon-time-container {
