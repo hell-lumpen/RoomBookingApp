@@ -14,10 +14,122 @@
 
 input{
   padding: 5px;
-  box-shadow: 0 0 3px rgb(0,0,0, 0.5);
+  box-shadow: 0 0 1px rgb(0,0,0, 0.5);
+  border-radius: 10px;
+
+  font-size: 20px;
+
+
+
+  /*font-size: 16px;*/
+  outline: none;
+  border: none;
+  text-align: center;
+}
+
+.dfds{
+  box-shadow: 0 0 2px rgb(0,0,0, 0.8);
   border-radius: 20px;
+  width: 25px;
+  height: 25px;
+  font-weight: bold;
+  /*color: #0095DA; !* Цвет синего текста *!*/
+  background: none;
+
+  /*font-size: 16px;*/
+  outline: none;
+  border: none;
+  text-align: center;
+}
+
+select{
+  padding: 5px;
+  box-shadow: 0 0 1px rgb(0,0,0, 0.5);
+  border-radius: 10px;
   font-size: 16px;
   outline: none;
   border: none;
   text-align: center;
 }
+
+input {
+  font: 'Arial';
+}
+
+
+.Info{
+  position: fixed;
+  top:0;
+  bottom:0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  animation: toGray 0.3s ease forwards reverse;
+}
+
+.new-booking-background-block{
+  position: fixed;
+  top:0;
+  bottom:0;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  background: rgba(0,0,0,60%);
+
+}
+
+
+.control-panel-container{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  margin-left: 5%;
+}
+
+.date-container-main{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: max-content;
+}
+
+.date-container-text{
+  font-weight: bold;
+  border-width: 1px;
+  /*background: red;*/
+
+  text-align: center;
+  padding-left: 10px;
+  padding-right: 10px;
+  position: relative;
+  margin-top: 1px;
+}
+
+.new-booking-button-container{
+
+  background: none;
+  border: none ;
+  font-weight: bold;
+  font-size: 18px;
+  margin-right: 5%;
+}
+
+
+.Info.state1{
+  animation: toGray 0.3s ease forwards ;
+}
+
+.Info.state2{
+  animation: toGray 0.4s ease forwards reverse;
+}
+
+@keyframes toGray {
+  from {
+    background: rgba(0,0,0,0);
+  }
+  to{
+    background: rgba(0,0,0,60%);
+  }
+}
+
