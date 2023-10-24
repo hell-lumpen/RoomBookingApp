@@ -22,15 +22,24 @@
     background-color: #f8f9fa;
 }
 
-.booking-card > div {
+.booking-info {
+    margin-bottom: 15px;
+    font-weight: 700;
+}
+
+.icon-time-container {
+    display: flex;
+    align-items: center;
     margin-bottom: 8px;
 }
 
-.booking-card > div:first-child {
-    font-weight: bold;
-    color: #343a40; /* Темный текст */
+.icon {
+    margin-right: 4px;
 }
 
-.booking-card > div:last-child {
-    color: #868e96; /* Серый текст */
+.icon-text-container-person {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    color: #868e96;
 }

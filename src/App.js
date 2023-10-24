@@ -210,12 +210,15 @@ const App = () => {
                 <h1>Бронирование аудиторий </h1>
                 <div className='control-panel-container'>
                     <div className='date-container-main'>
-                        <button className='dfds' onClick={backDayClick}>{'<'}</button>
-                        <div onClick={todayDayClick}
-                             className='date-container-text'>{dateResponse.getDate()} {getMonth()}</div>
-                        <button className='dfds' onClick={() => {
-                            nextDayClick()
-                        }}>{'>'}</button>
+                        <button className='dfds' onClick={backDayClick}>
+                            <span className="material-icons arrow">arrow_back_ios</span>
+                        </button>
+
+                        <div onClick={todayDayClick} className='date-container-text'>{dateResponse.getDate()} {getMonth()}</div>
+
+                        <button className='dfds' onClick={() => {nextDayClick()}}>
+                            <span className="material-icons arrow">arrow_forward_ios</span>
+                        </button>
                     </div>
                     <button className='new-booking-button-container' onClick={()=>{
                         setNewBooking(false);

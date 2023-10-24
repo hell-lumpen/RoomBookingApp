@@ -18,9 +18,15 @@ const BookingRoomComponent = ({funcClickDiv, updateDataInfoBlock, name, bookings
                         updateDataInfoBlock(booking);
                         funcClickDiv(booking.id);
                     }}>
-                        <div>{booking.description}</div>
-                        <div>{getTime(new Date(booking.startTime))} - {getTime(new Date(booking.endTime))}</div>
-                        <div>{booking.username}</div>
+                      <div className="booking-info">{booking.description}</div>
+                      <div className="icon-time-container">
+                        <span className="material-icons icon">schedule</span>
+                        {getTime(new Date(booking.startTime))} - {getTime(new Date(booking.endTime))}
+                      </div>
+                      <div className="icon-text-container-person">
+                        <span className="material-icons icon">person</span>
+                        {booking.username}
+                      </div>
                     </div>
                 ))}
             </div>

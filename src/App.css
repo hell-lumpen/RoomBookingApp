@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700;900&display=swap');
+
 .App {
   max-width: 800px;
   margin: 20px auto;
@@ -5,11 +7,13 @@
   background-color: #fff;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-radius: 8px;
+  font-family: 'Roboto', sans-serif;
 }
 
 .App h1 {
   color: #333;
   text-align: center;
+  font-weight: 900;
 }
 
 input{
@@ -27,19 +31,48 @@ input{
   text-align: center;
 }
 
-.dfds{
-  box-shadow: 0 0 2px rgb(0,0,0, 0.8);
+.material-icons {
+  font-family: 'Material Icons', serif;
+  font-weight: normal;
+  font-style: normal;
+  font-size: 16px;  /* Preferred icon size */
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  margin-right: 5px;
+
+  /* Support for all WebKit browsers. */
+  -webkit-font-smoothing: antialiased;
+  /* Support for Safari and Chrome. */
+  text-rendering: optimizeLegibility;
+
+  /* Support for Firefox. */
+  -moz-osx-font-smoothing: grayscale;
+
+  /* Support for IE. */
+  font-feature-settings: 'liga';
+}
+
+.dfds {
+  display: flex;
+  align-items: center;
+  box-shadow: 0 0 2px rgb(0, 0, 0, 0.8);
   border-radius: 20px;
   width: 25px;
   height: 25px;
   font-weight: bold;
-  /*color: #0095DA; !* Цвет синего текста *!*/
   background: none;
-
-  /*font-size: 16px;*/
   outline: none;
   border: none;
   text-align: center;
+}
+
+.arrow {
+  margin: 0;
 }
 
 select{

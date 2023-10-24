@@ -53,7 +53,7 @@ const RoomInfoBlockComponent = ({ data }) => {
 
                     <div id='purpose' className='info-block'>
                         <strong className='title'>Описание:</strong>
-                        <div className='input-block'>Компьютерная графика</div>
+                        <div className='input-block'>{data.description}</div>
                     </div>
 
                 </div>
