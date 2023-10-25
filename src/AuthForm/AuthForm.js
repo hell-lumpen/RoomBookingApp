@@ -1,7 +1,7 @@
-// AuthForm.js
-
 import React, { useState } from 'react';
 import axios from 'axios';
+import { motion } from 'framer-motion';
+
 import './AuthForm.css'
 
 const AuthForm = ({ onClose }) => {
@@ -42,9 +42,21 @@ const AuthForm = ({ onClose }) => {
   };
 
   return (
-      <div className="form-container">
-        <button className="close-button" onClick={onClose}>✖</button>
-        <h2>{isRegistering ? 'Регистрация' : 'Вход'}</h2>
+      <motion.div
+          className="form-container"
+          initial={{ opacity: 0, y: "-50%", scale: 0.8 }}
+          animate={{ opacity: 1, y: "0%", scale: 1 }}
+          exit={{ opacity: 0, y: "-50%", scale: 0.8 }}
+      >
+        <motion.button
+            className="close-button"
+            onClick={onClose}
+        >
+          ✖
+        </motion.button>
+        <motion.h2>
+          {isRegistering ? 'Регистрация' : 'Вход'}
+        </motion.h2>
         <form>
           <label>
             Имя пользователя:
@@ -60,19 +72,25 @@ const AuthForm = ({ onClose }) => {
                 <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
               </label>
           )}
-          <button type="button" onClick={() => {handleSubmit(); onClose();}}>
+          <motion.button
+              type="button"
+              onClick={() => { handleSubmit(); onClose(); }}
+          >
             {isRegistering ? 'Зарегистрироваться' : 'Войти'}
-          </button>
+          </motion.button>
           <p>
             {isRegistering
                 ? 'Уже есть аккаунт?'
                 : 'Нет аккаунта? '}
-            <button type="button" onClick={() => {handleToggleMode(); onClose();}}>
+            <motion.button
+                type="button"
+                onClick={() => { handleToggleMode(); onClose(); }}
+            >
               {isRegistering ? 'Войти' : 'Зарегистрироваться'}
-            </button>
+            </motion.button>
           </p>
         </form>
-      </div>
+      </motion.div>
   );
 };
 

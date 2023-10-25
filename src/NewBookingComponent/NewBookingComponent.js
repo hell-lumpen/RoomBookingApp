@@ -99,7 +99,10 @@ const NewBookingComponent = ({call_function}) => {
 
             </div>
             <div className='new-booking-buttons-container'>
-                <button className='new-booking-buttons-cancel' onClick={()=>{call_function(true)}}>Отмена</button>
+                <button className='new-booking-buttons-cancel' onClick={()=>{
+                    console.log('click');
+                    call_function(true)
+                }}>Отмена</button>
                 <button className='new-booking-buttons-accept' >Бронировать</button>
             </div>
         </div>

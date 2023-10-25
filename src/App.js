@@ -5,45 +5,9 @@ import BookingRoomComponent from "./RoomContainer/RoomContainer";
 import RoomInfoBlockComponent from "./RoomInfoBlockComponent/RoomInfoBlockComponent";
 import NewBookingComponent from "./NewBookingComponent/NewBookingComponent";
 import AuthForm from "./AuthForm/AuthForm";
+import {motion, AnimatePresence} from "framer-motion";
 
 const App = () => {
-
-
-
-
-    const mocRoomDataArray = [
-        {
-            "roomName": "Переговорка 1",
-            "bookings": [
-                {
-                    "id": 1,
-                    "startTime": "2023-01-05T10:00:00",
-                    "endTime": "2023-01-05T12:00:00",
-                    "bookingPurpose": "Совещание",
-                    "username": "Крылов Сергей Сергеевич"
-                },
-                {
-                    "id": 2,
-                    "startTime": "2023-01-08T14:00:00",
-                    "endTime": "2023-01-08T16:00:00",
-                    "bookingPurpose": "Презентация",
-                    "username": "Полей-Добронравова Амелия Александровна"
-                }
-            ]
-        },
-        {
-            "roomName": "Конференц-зал A",
-            "bookings": [
-                {
-                    "id": 3,
-                    "startTime": "2023-01-07T09:00:00",
-                    "endTime": "2023-01-07T11:00:00",
-                    "bookingPurpose": "Обсуждение проекта",
-                    "username": "Булакина Мария Борисовна"
-                }
-            ]
-        }
-    ];
     const animationInfoBlock = (div) => {
         setInfoBlock(false);
         console.log('target', div);
@@ -84,132 +48,95 @@ const App = () => {
         document.getElementById('Info-Block').classList.add('state2');
 
         document.getElementById('room-info-block').classList.add('state2');
-
-
     }
 
-    const [roomDataArray, setRoomDataArray] = useState(mocRoomDataArray);
+    const [roomDataArray, setRoomDataArray] = useState([]);
     const [isInfoBlock, setInfoBlock] = useState(true);
     const [isNewBooking, setNewBooking] = useState(true);
     const [infoBlockData, setInfoBlockData] = useState({});
     const [dateResponse, setDateResponse] = useState(new Date());
 
-    const fetchRoomData = () => {
+    const formatDate = (d) => {
+        const padWithZero = (number) => String(number).padStart(2, '0');
+        const year = d.getFullYear();
+        const month = padWithZero(d.getMonth() + 1);
+        const day = padWithZero(d.getDate());
+        return `${year}-${month}-${day}T00:00:00`;
+    };
+
+    const handleFetchError = (error) => {
+        if (error.response) {
+            console.error('Error response data:', error.response.data);
+            if (error.response.status === 403) {
+                setPopupOpen(true);
+            } else if (error.response.status === 500) {
+                // Обработка ошибки 500
+            }
+        } else if (error.request) {
+            console.error('No response received');
+        } else {
+            console.error('Error setting up the request:', error.message);
+        }
+    };
+
+    const fetchRoomData = async () => {
         try {
             const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJpYXQiOjE2OTgwNzEzMzEsImV4cCI6MTY5ODY3NjEzMX0.trcNRuEYO7iQIJ-GWvA-ezDen6QKJG2AWwiwsnOBxjI';
 
-            var base64Url = token.split('.')[1];
-            var decoded = JSON.parse(window.atob(base64Url))
-
-            console.log(decoded);
-
             const headers = {
                 Authorization: 'Bearer ' + token,
-            }
+            };
 
-            const date = dateResponse;
-            console.log(dateResponse);
-            console.log(date);
-            const year = date.getFullYear();
-            let month = String(date.getMonth() + 1).padStart(2, '0');
-            let day = String(date.getDate()).padStart(2, '0');
+            const currentDate = dateResponse;
+            const nextDate = new Date(currentDate.getTime() + 1000 * 60 * 60 * 24);
 
-            const date1 = new Date(date.getTime() + 1000 * 60 * 60 * 24);
-            const month1 = String(date1.getMonth() + 1).padStart(2, '0');
-            const day1 = String(date1.getDate()).padStart(2, '0');
+            const startTime = formatDate(currentDate);
+            const endTime = formatDate(nextDate);
 
-            // console.log('url',
-            //     'http://127.0.0.1:8080/api/bookings?startTime=' + year + '-' + month + '-' + day + 'T15:00:00&endTime='+year+'-'+month1+'-'+day1+'T00:00:00',
-            // );
-            // axios.get(
-            //     'http://127.0.0.1:8080/api/room/all',
-            //     {headers}
-            // ).then(
-            //     (response) => {
-            //
-            //
-            //         console.log('asd', response.data);
-            //     }
-            // );
-
-            axios.get(
-                'http://10.10.69.65:8080/api/bookings?startTime=' + year + '-' + month + '-' + day + 'T00:00:00&endTime=' + year + '-' + month1 + '-' + day1 + 'T00:00:00',
-                {headers}
-            ).then(
-                (response) => {
-
-                    setRoomDataArray(response.data);
-                    console.log('end function axios')
-                }
+            const response = await axios.get(
+                `http://10.10.69.65:8080/api/bookings?startTime=${startTime}&endTime=${endTime}`,
+                { headers }
             );
-            // console.log('response', response);
+
+            setRoomDataArray(response.data);
+            return response.data;
         } catch (error) {
-            console.error('Ошибка при получении данных:', error);
-            setRoomDataArray(mocRoomDataArray);
+            handleFetchError(error);
+            throw error;
         }
     };
 
     useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await fetchRoomData();
+                // Далее можно выполнить дополнительные действия с полученными данными, если это необходимо
+            } catch (error) {
+                // Обработка ошибки, если необходимо
+            }
+        };
 
-        fetchRoomData();
+        fetchData();
     }, [dateResponse]);
-
-    // fetchRoomData();
-
 
     const todayDayClick = () => {
         setDateResponse(new Date());
         // fetchRoomData();
     };
 
-    const setTime = () => {
-        const d1 = dateResponse;
-        const d2 = new Date(d1.getTime() + 1000 * 60 * 60 * 24);
-        setDateResponse(d2);
-        console.log('d1', d1);
-        console.log('d2', d2);
-        console.log('d3', dateResponse);
-    }
-
     const nextDayClick = () => {
-        setTime();
-        // fetchRoomData();
-
+        setDateResponse(new Date(dateResponse.getTime() + 1000 * 60 * 60 * 24));
     };
 
     const backDayClick = () => {
         setDateResponse(new Date(dateResponse.getTime() - 1000 * 60 * 60 * 24));
-
-    }
+    };
 
     const getMonth = () => {
-        switch (dateResponse.getMonth()) {
-            case(0):
-                return 'января';
-            case(1):
-                return 'февраля';
-            case(2):
-                return 'марта';
-            case(3):
-                return 'апреля';
-            case(4):
-                return 'мая';
-            case(5):
-                return 'июня';
-            case(6):
-                return 'июля';
-            case(7):
-                return 'августа';
-            case(8):
-                return 'сентября';
-            case(9):
-                return 'октября';
-            case(10):
-                return 'ноября';
-            case(11):
-                return 'декабря';
-        }
-    }
+        return ['января', 'февраля', 'марта', 'апреля',
+            'мая', 'июня', 'июля', 'августа',
+            'сентября', 'октября', 'ноября', 'декабря'][dateResponse.getMonth()];
+    };
 
     const [isPopupOpen, setPopupOpen] = useState(false);
 
@@ -227,13 +154,27 @@ const App = () => {
                 <div className="login-button-container">
                     <button className='login-button' onClick={openPopup}><span className="material-icons account_circle">account_circle</span>Войти</button>
                 </div>
-                {isPopupOpen && (
-                    <div className="popup-container">
-                        <div className="popup-content">
-                            <AuthForm onClose={closePopup} />
-                        </div>
-                    </div>
-                )}
+                <AnimatePresence>
+                    {isPopupOpen && (
+                        <motion.div
+                            className="popup-container"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{ opacity: 0 }}
+                            transition={{ duration: 0.1 }}
+                        >
+                            <motion.div
+                                className="popup-content"
+                                initial={{ y: "-50%", opacity: 0 }}
+                                animate={{ y: "0%", opacity: 1 }}
+                                exit={{ y: "-50%", opacity: 0 }}
+                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                            >
+                                <AuthForm onClose={closePopup} />
+                            </motion.div>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
                 <h1>Бронирование аудиторий IT-этажа</h1>
                 <div className='control-panel-container'>
                     <div className='date-container-main'>
@@ -258,6 +199,7 @@ const App = () => {
                     <BookingRoomComponent funcClickDiv={animationInfoBlock} updateDataInfoBlock={setInfoBlockData}
                                           key={index} {...roomData} />
                 ))}
+
             </div>
 
             <div id='Info-Block' className='Info' hidden={isInfoBlock} onClick={() => {
@@ -267,7 +209,7 @@ const App = () => {
             </div>
 
 
-            <div id='new-booking-background-block' className='new-booking-background-block' hidden={isNewBooking}>
+            <div id='new-booking-background-block' className='new-booking-background-block' hidden={isNewBooking} onClick={()=>{setNewBooking(true)}} z->
                 <NewBookingComponent call_function={setNewBooking}/>
             </div>
 
