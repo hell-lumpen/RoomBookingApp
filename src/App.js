@@ -6,8 +6,11 @@ import RoomInfoBlockComponent from "./RoomInfoBlockComponent/RoomInfoBlockCompon
 import NewBookingComponent from "./NewBookingComponent/NewBookingComponent";
 import AuthForm from "./AuthForm/AuthForm";
 import {motion, AnimatePresence} from "framer-motion";
+import jwt_decode from 'jwt-decode';
 
-const App = () => {
+const App = key => {
+    const config = require('./config');
+
     const animationInfoBlock = (div) => {
         setInfoBlock(false);
         console.log('target', div);
@@ -56,6 +59,8 @@ const App = () => {
     const [infoBlockData, setInfoBlockData] = useState({});
     const [dateResponse, setDateResponse] = useState(new Date());
 
+    const [userFullname, setUserFullname] = useState(null);
+
     const formatDate = (d) => {
         const padWithZero = (number) => String(number).padStart(2, '0');
         const year = d.getFullYear();
@@ -63,6 +68,13 @@ const App = () => {
         const day = padWithZero(d.getDate());
         return `${year}-${month}-${day}T00:00:00`;
     };
+
+    const setUserClaims = () => {
+        const token = localStorage.getItem('token');
+        const decoded = jwt_decode(token);
+        console.log(decoded.fullname)
+        setUserFullname(decoded.fullname)
+    }
 
     const handleFetchError = (error) => {
         if (error.response) {
@@ -82,7 +94,8 @@ const App = () => {
 
     const fetchRoomData = async () => {
         try {
-            const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJpYXQiOjE2OTgwNzEzMzEsImV4cCI6MTY5ODY3NjEzMX0.trcNRuEYO7iQIJ-GWvA-ezDen6QKJG2AWwiwsnOBxjI';
+            const token = localStorage.getItem('token');
+            setUserClaims();
 
             const headers = {
                 Authorization: 'Bearer ' + token,
@@ -95,7 +108,7 @@ const App = () => {
             const endTime = formatDate(nextDate);
 
             const response = await axios.get(
-                `http://localhost:8080/api/bookings?startTime=${startTime}&endTime=${endTime}`,
+                `http://${config.hostName}:${config.port}/api/bookings?startTime=${startTime}&endTime=${endTime}`,
                 // `http://10.10.69.65:8080/api/bookings?startTime=${startTime}&endTime=${endTime}`,
                 { headers }
             );
@@ -155,7 +168,9 @@ const App = () => {
         <div>
             <div className="App">
                 <div className="login-button-container">
-                    <button className='login-button' onClick={openPopup}><span className="material-icons account_circle">account_circle</span>Войти</button>
+                    <button className='login-button' onClick={openPopup}><span className="material-icons account_circle">account_circle</span>
+                        {userFullname === null ? 'Войти' : userFullname}
+                    </button>
                 </div>
                 <AnimatePresence>
                     {isPopupOpen && (
@@ -173,7 +188,7 @@ const App = () => {
                                 exit={{ y: "-50%", opacity: 0.8 }}
                                 transition={{ duration: 0.3, ease: "easeInOut" }}
                             >
-                                <AuthForm onClose={closePopup} />
+                                <AuthForm onClose={closePopup} fetchData={fetchRoomData} />
                             </motion.div>
                         </motion.div>
                     )}

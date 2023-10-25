@@ -4,11 +4,14 @@ import { motion } from 'framer-motion';
 
 import './AuthForm.css'
 
-const AuthForm = ({ onClose }) => {
+const AuthForm = ({ onClose, fetchData }) => {
+
+  const config = require('../config');
+
   const [isRegistering, setIsRegistering] = useState(false);
+
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [email, setEmail] = useState('');
 
   const handleToggleMode = () => {
     setIsRegistering(!isRegistering);
@@ -16,21 +19,20 @@ const AuthForm = ({ onClose }) => {
 
   const handleSubmit = async () => {
     try {
-      // Отправка запроса на сервер для входа или регистрации
-      const endpoint = isRegistering ? 'your_register_endpoint' : 'your_login_endpoint';
-      const response = await axios.post(endpoint, { username, password, email });
+      const headers = {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': 'http://localhost:3000',
+      };
 
+      const endpoint = isRegistering ? `http://${config.hostName}:${config.port}/api/auth/register` : `http://${config.hostName}:${config.port}/api/auth/login`;
+      const response = await axios.post(endpoint, { username, password }, {headers});
       if (response.status === 200) {
         // Получение токена из ответа сервера
         const { token } = response.data;
 
-        // Сохранение токена в local storage
         localStorage.setItem('token', token);
+        fetchData();
 
-        // Дополнительные действия после успешного входа или регистрации
-        // Например, перенаправление на другую страницу
-
-        // Закрыть всплывающее окно
         onClose();
       } else {
         // Обработка ошибок входа или регистрации
@@ -49,12 +51,12 @@ const AuthForm = ({ onClose }) => {
           exit={{ y: "-50%", opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
       >
-        {/*<motion.button*/}
-        {/*    className="close-button"*/}
-        {/*    onClick={onClose}*/}
-        {/*>*/}
-        {/*  ✖*/}
-        {/*</motion.button>*/}
+        <motion.button
+            className="close-button"
+            onClick={onClose}
+        >
+          ✖
+        </motion.button>
         <motion.h2>
           {isRegistering ? 'Регистрация' : 'Вход'}
         </motion.h2>
@@ -84,7 +86,7 @@ const AuthForm = ({ onClose }) => {
                 <motion.button
                     type="button"
                     className="login-button-in-form"
-                    onClick={() => { handleSubmit(); onClose(); }}
+                    onClick={() => { handleSubmit(); }}
                 >
                   <span className="material-icons login-icon">login</span> Войти
                 </motion.button>
