@@ -1,43 +1,43 @@
 import './NewBookingComponent.css'
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import axios from "axios";
 
 
 const NewBookingComponent = ({call_function}) => {
-    const audiences = [
-        'It - 5',
-        'It - 6',
-        'It - 7',
-        'It - 8',
-        'It - 9',
-        'It - 10',
-        'It - 11',
-        'It - 12',
-        'It - 13',
-        'It - 14',
-        'It - 15',
-        'It - 16',
-        'It - 17'
-    ];
+    const [audiences, setAudiences] = useState([]);
 
     useEffect(() => {
         getAudience()
     }, []);
+
+
+    const formatDate = (d) => {
+        const padWithZero = (number) => String(number).padStart(2, '0');
+        const year = d.getFullYear();
+        const month = padWithZero(d.getMonth() + 1);
+        const day = padWithZero(d.getDate());
+        const hour = padWithZero(d.getHours());
+        const minute = padWithZero(d.getMinutes());
+        return `${year}-${month}-${day}T${hour}:${minute}:00`;
+    };
     const getAudience=()=>{
-        const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJpYXQiOjE2OTgwNzEzMzEsImV4cCI6MTY5ODY3NjEzMX0.trcNRuEYO7iQIJ-GWvA-ezDen6QKJG2AWwiwsnOBxjI';
+        const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsImlhdCI6MTY5ODI2MTY4MCwiZXhwIjoxNjk4ODY2NDgwfQ.AawbMklibKrg8USLtETf1U8e_lRY5F2-jfSvHdlQY_U';
         const headers = {
-            Authorization: 'Bearer ' + token,
+            Authorization: 'Bearer ' + token
         }
-        // axios.get(
-        //     'http://127.0.0.1:8080/api/room/all',
-        //     {headers}
-        // ).then(
-        //     (response) => {
-        //
-        //
-        //         console.log('asd', response.data);
-        //     }
-        // );
+        axios.get(
+            'http://127.0.0.1:8080/api/room/all',
+            {headers}
+        ).then(
+            (response) => {
+                const new_array = [];
+                response.data.forEach((id, name) => {
+                    new_array.push(id.name);
+                })
+
+                setAudiences(new_array);
+            }
+        );
     }
 
     const acceptBtnClick = () => {
@@ -48,17 +48,69 @@ const NewBookingComponent = ({call_function}) => {
         const end_time = document.getElementById('book-end-time').value;
         const description = document.getElementById('book-description').value;
         if (audience !== 'default' && date !== '' && start_time !== '' && end_time !== '' && description !== '') {
-            console.log('a', audience);
-            console.log('a', date);
-            console.log('a', start_time);
-            console.log('a', end_time);
-            console.log('a', description);
+            // console.log('a', audience);
+            // console.log('a', date);
+            // console.log('a', start_time);
+            // console.log('a', end_time);
+            // console.log('a', description);
+            const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZSIsImlhdCI6MTY5ODI2MTY4MCwiZXhwIjoxNjk4ODY2NDgwfQ.AawbMklibKrg8USLtETf1U8e_lRY5F2-jfSvHdlQY_U';
+            const headers = {
+                Authorization: 'Bearer ' + token,
+                'Content-Type': 'application/json'
+            }
+
+            let dateParts = date.split('-'); // Разбиваем строку на части
+            let year = parseInt(dateParts[0], 10);
+            let month = parseInt(dateParts[1], 10) - 1; // Месяцы в JavaScript начинаются с 0 (январь - 0, февраль - 1, и так далее)
+            let day = parseInt(dateParts[2], 10);
+
+            const start_date = new Date(year, month, day);
+            const end_date = new Date(start_date);
+
+
+            dateParts = start_time.split(':');
+            start_date.setHours(parseInt(dateParts[0], 10), parseInt(dateParts[1], 10), 0);
+            dateParts = end_time.split(':');
+            end_date.setHours(parseInt(dateParts[0], 10), parseInt(dateParts[1], 10), 0);
+
+            console.log('start', start_date);
+            console.log('end', start_date);
+
+
+            const id = 5;
+            const roomId = 1;
+            const userId = 1;
+            const startTime = formatDate(start_date);
+            const endTime = formatDate(end_date);
+            const rRule = null;
+
+            console.log('start', startTime);
+            console.log('end', endTime);
+
+            axios.post(
+                'http://127.0.0.1:8080/api/bookings',
+                {
+                    // id,
+                    roomId,
+                    userId,
+                    startTime,
+                    endTime,
+                    description,
+                    rRule
+                },
+                {headers},
+
+            )
+
+
         }
     }
 
     return (
 
-        <div className='new-booking-block-window' id='new-booking-block-window'>
+        <div className='new-booking-block-window' id='new-booking-block-window' onClick={(event)=>{
+            event.stopPropagation();
+        }}>
             <div className='new-booking-block-window-container'>
 
                 <div className='info-block'>
@@ -100,10 +152,14 @@ const NewBookingComponent = ({call_function}) => {
             </div>
             <div className='new-booking-buttons-container'>
                 <button className='new-booking-buttons-cancel' onClick={()=>{
-                    console.log('click');
+                    console.log('click cancel');
                     call_function(true)
                 }}>Отмена</button>
-                <button className='new-booking-buttons-accept' >Бронировать</button>
+                <button className='new-booking-buttons-accept' onClick={()=>{
+                    console.log('click accept');
+                    acceptBtnClick();
+                    call_function(true);
+                }}>Бронировать</button>
             </div>
         </div>
 
