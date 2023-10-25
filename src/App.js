@@ -98,8 +98,8 @@ const App = () => {
         try {
             const token = 'eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VybmFtZTEiLCJpYXQiOjE2OTgwNzEzMzEsImV4cCI6MTY5ODY3NjEzMX0.trcNRuEYO7iQIJ-GWvA-ezDen6QKJG2AWwiwsnOBxjI';
 
-            var base64Url = token.split('.')[1];
-            var decoded = JSON.parse(window.atob(base64Url))
+            let base64Url = token.split('.')[1];
+            let decoded = JSON.parse(window.atob(base64Url));
 
             console.log(decoded);
 
@@ -137,7 +137,6 @@ const App = () => {
                 {headers}
             ).then(
                 (response) => {
-
                     setRoomDataArray(response.data);
                     console.log('end function axios')
                 }
@@ -150,7 +149,6 @@ const App = () => {
     };
 
     useEffect(() => {
-
         fetchRoomData();
     }, [dateResponse]);
 
@@ -162,25 +160,13 @@ const App = () => {
         // fetchRoomData();
     };
 
-    const setTime = () => {
-        const d1 = dateResponse;
-        const d2 = new Date(d1.getTime() + 1000 * 60 * 60 * 24);
-        setDateResponse(d2);
-        console.log('d1', d1);
-        console.log('d2', d2);
-        console.log('d3', dateResponse);
-    }
-
     const nextDayClick = () => {
-        setTime();
-        // fetchRoomData();
-
+        setDateResponse(new Date(dateResponse.getTime() + 1000 * 60 * 60 * 24));
     };
 
     const backDayClick = () => {
         setDateResponse(new Date(dateResponse.getTime() - 1000 * 60 * 60 * 24));
-
-    }
+    };
 
     const getMonth = () => {
         switch (dateResponse.getMonth()) {
@@ -267,7 +253,7 @@ const App = () => {
             </div>
 
 
-            <div id='new-booking-background-block' className='new-booking-background-block' hidden={isNewBooking}>
+            <div id='new-booking-background-block' className='new-booking-background-block' hidden={isNewBooking} onClick={()=>{setNewBooking(true)}} z->
                 <NewBookingComponent call_function={setNewBooking}/>
             </div>
 
