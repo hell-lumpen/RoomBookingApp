@@ -7,6 +7,7 @@
     font-family: 'Geologica', sans-serif;
     font-weight: 400;
     font-size: 16px;
+    width: 100%;
 }
 
 /* Добавим стили для кнопки закрытия */
@@ -18,40 +19,70 @@
     cursor: pointer;
     background: none;
     border: none;
-    color: #0095DA; /* серый цвет */
+    color: #0095DA;
 }
 
-h2 {
+.login-in-form-button-container {
+    display: flex;
+    justify-content: center;
+}
+
+.registration-in-form-container {
+    display: flex;
+    margin-top: 20px;
+    padding: 10px;
+    color: #868e96;
+    justify-content: space-around;
+}
+
+.login-icon {
+    color: #0095DA;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.login-button-in-form {
+    background: none;
+    border: none;
+    font-family: 'Geologica', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    align-items: center;
+    display: flex;
+    cursor: pointer;
+}
+
+.form-container h2 {
     text-align: center;
+    font-weight: 900;
+    font-size: 20px;
 }
 
 form {
     display: flex;
     flex-direction: column;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 label {
     margin-bottom: 10px;
+    font-weight: 400;
+    font-size: 14px;
 }
 
 input {
     width: 100%;
-    padding: 5px;
+    padding-left: 15px;
     margin-top: 10px;
     margin-bottom: 10px;
     box-sizing: border-box;
     font-family: 'Geologica', sans-serif;
     font-weight: 400;
     font-size: 16px;
+    text-align: left;
 }
 
-p {
+.registration-in-form-container p {
     text-align: center;
-}
-
-/* Медиа запрос для адаптивности */
-@media (max-width: 500px) {
-    .form-container {
-        width: 90%;
-    }
 }

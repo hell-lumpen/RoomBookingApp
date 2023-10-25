@@ -44,51 +44,68 @@ const AuthForm = ({ onClose }) => {
   return (
       <motion.div
           className="form-container"
-          initial={{ opacity: 0, y: "-50%", scale: 0.8 }}
-          animate={{ opacity: 1, y: "0%", scale: 1 }}
-          exit={{ opacity: 0, y: "-50%", scale: 0.8 }}
+          initial={{ y: "-50%", opacity: 0 }}
+          animate={{ y: "0%", opacity: 1 }}
+          exit={{ y: "-50%", opacity: 0 }}
+          transition={{ duration: 0.3, ease: "easeInOut" }}
       >
-        <motion.button
-            className="close-button"
-            onClick={onClose}
-        >
-          ✖
-        </motion.button>
+        {/*<motion.button*/}
+        {/*    className="close-button"*/}
+        {/*    onClick={onClose}*/}
+        {/*>*/}
+        {/*  ✖*/}
+        {/*</motion.button>*/}
         <motion.h2>
           {isRegistering ? 'Регистрация' : 'Вход'}
         </motion.h2>
         <form>
-          <label>
-            Имя пользователя:
-            <input type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
-          </label>
-          <label>
-            Пароль:
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-          </label>
-          {isRegistering && (
-              <label>
-                Электронная почта:
-                <input type="text" value={email} onChange={(e) => setEmail(e.target.value)} />
-              </label>
-          )}
-          <motion.button
-              type="button"
-              onClick={() => { handleSubmit(); onClose(); }}
-          >
-            {isRegistering ? 'Зарегистрироваться' : 'Войти'}
-          </motion.button>
-          <p>
-            {isRegistering
+          { !isRegistering ?
+            (
+              <>
+                <label>
+                  Имя пользователя:
+                  <input placeholder="username" type="text" value={username} onChange={(e) => setUsername(e.target.value)} />
+                </label>
+
+                <label>
+                  Пароль:
+                  <input placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                </label>
+              </>
+            ) : (
+                <p>
+                  Регистрация пользователей недоступна
+                </p>
+            )
+          }
+
+          {!isRegistering ? (
+              <div className="login-in-form-button-container">
+                <motion.button
+                    type="button"
+                    className="login-button-in-form"
+                    onClick={() => { handleSubmit(); onClose(); }}
+                >
+                  <span className="material-icons login-icon">login</span> Войти
+                </motion.button>
+              </div>
+          ) : null}
+
+          <div className="registration-in-form-container">
+
+            <p>
+              {isRegistering
                 ? 'Уже есть аккаунт?'
                 : 'Нет аккаунта? '}
+            </p>
             <motion.button
                 type="button"
-                onClick={() => { handleToggleMode(); onClose(); }}
+                onClick={() => { handleToggleMode();}}
+                className="login-button-in-form"
             >
               {isRegistering ? 'Войти' : 'Зарегистрироваться'}
             </motion.button>
-          </p>
+          </div>
         </form>
       </motion.div>
   );

@@ -69,6 +69,7 @@ const App = () => {
             console.error('Error response data:', error.response.data);
             if (error.response.status === 403) {
                 setPopupOpen(true);
+                setRoomDataArray([]);
             } else if (error.response.status === 500) {
                 // Обработка ошибки 500
             }
@@ -94,11 +95,13 @@ const App = () => {
             const endTime = formatDate(nextDate);
 
             const response = await axios.get(
-                `http://10.10.69.65:8080/api/bookings?startTime=${startTime}&endTime=${endTime}`,
+                `http://localhost:8080/api/bookings?startTime=${startTime}&endTime=${endTime}`,
+                // `http://10.10.69.65:8080/api/bookings?startTime=${startTime}&endTime=${endTime}`,
                 { headers }
             );
 
             setRoomDataArray(response.data);
+            setPopupOpen(false);
             return response.data;
         } catch (error) {
             handleFetchError(error);
@@ -167,7 +170,7 @@ const App = () => {
                                 className="popup-content"
                                 initial={{ y: "-50%", opacity: 0 }}
                                 animate={{ y: "0%", opacity: 1 }}
-                                exit={{ y: "-50%", opacity: 0 }}
+                                exit={{ y: "-50%", opacity: 0.8 }}
                                 transition={{ duration: 0.3, ease: "easeInOut" }}
                             >
                                 <AuthForm onClose={closePopup} />

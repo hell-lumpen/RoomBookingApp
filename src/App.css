@@ -14,6 +14,7 @@
   /*font-family: 'PT Sans Caption', sans-serif;*/
   /*font-family: 'Scada', sans-serif;*/
   font-family: 'Geologica', sans-serif;
+  /*height: 100vh;*/
 }
 
 div {
@@ -177,9 +178,7 @@ select{
 }
 
 .login-button-container {
-  cursor: pointer;
   display: flex;
-  align-items: center;
 }
 
 .account_circle {
@@ -233,5 +232,5 @@ select{
   justify-content: center;
   align-items: center;
   z-index: 100;
-  backdrop-filter: blur(6px);
+  backdrop-filter: blur(10px);
 }
