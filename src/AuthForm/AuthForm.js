@@ -6,12 +6,24 @@ import './AuthForm.css'
 
 const AuthForm = ({ onClose, fetchData }) => {
 
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+      const button = document.getElementById('submitLoginButton');
+      if (button) {
+        button.click();
+      }
+    }
+  });
+
   const config = require('../config');
 
   const [isRegistering, setIsRegistering] = useState(false);
+  const [successAuth, setSuccessAuth] = useState(true);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+
+  const isAppleDevice = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
 
   const handleToggleMode = () => {
     setIsRegistering(!isRegistering);
@@ -27,18 +39,19 @@ const AuthForm = ({ onClose, fetchData }) => {
       const endpoint = isRegistering ? `http://${config.hostName}:${config.port}/api/auth/register` : `http://${config.hostName}:${config.port}/api/auth/login`;
       const response = await axios.post(endpoint, { username, password }, {headers});
       if (response.status === 200) {
-        // Получение токена из ответа сервера
+
         const { token } = response.data;
-
         localStorage.setItem('token', token);
-        fetchData();
 
+        fetchData();
+        setSuccessAuth(true)
         onClose();
       } else {
-        // Обработка ошибок входа или регистрации
-        console.error('Аутентификация не удалась');
+        console.error(response.data)
+        setSuccessAuth(false);
       }
     } catch (error) {
+      setSuccessAuth(false);
       console.error('Ошибка во время аутентификации:', error);
     }
   };
@@ -51,12 +64,12 @@ const AuthForm = ({ onClose, fetchData }) => {
           exit={{ y: "-50%", opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
       >
-        <motion.button
-            className="close-button"
-            onClick={onClose}
-        >
-          ✖
-        </motion.button>
+        {/*<motion.button*/}
+        {/*    className="close-button"*/}
+        {/*    onClick={onClose}*/}
+        {/*>*/}
+        {/*  ✖*/}
+        {/*</motion.button>*/}
         <motion.h2>
           {isRegistering ? 'Регистрация' : 'Вход'}
         </motion.h2>
@@ -73,6 +86,11 @@ const AuthForm = ({ onClose, fetchData }) => {
                   Пароль:
                   <input placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 </label>
+                {!successAuth ? (
+                    <p style={{color: "red", marginBottom: "5px", marginTop: "5px"}}>
+                      Неверное имя пользователя или пароль
+                    </p>
+                ) : null}
               </>
             ) : (
                 <p>
@@ -82,15 +100,30 @@ const AuthForm = ({ onClose, fetchData }) => {
           }
 
           {!isRegistering ? (
-              <div className="login-in-form-button-container">
-                <motion.button
-                    type="button"
-                    className="login-button-in-form"
-                    onClick={() => { handleSubmit(); }}
-                >
-                  <span className="material-icons login-icon">login</span> Войти
-                </motion.button>
-              </div>
+              <>
+                <div className="login-in-form-button-container">
+                  <motion.button
+                      id="submitLoginButton"
+                      type="button"
+                      className="login-button-in-form"
+                      onClick={() => { handleSubmit(); }}
+                  >
+                    <span className="material-icons login-icon">login</span> Войти
+                  </motion.button>
+                </div>
+                {isAppleDevice ? (
+                    <div className="passkey-in-form-button-container">
+                      <motion.button
+                          type="button"
+                          className="passkey-button-in-form"
+                          onClick={() => { handleSubmit();
+                          }}
+                      >
+                        <span className="material-symbols-outlined passkey">passkey</span> Войти используя Passkey
+                      </motion.button>
+                    </div>
+                ) : null}
+              </>
           ) : null}
 
           <div className="registration-in-form-container">

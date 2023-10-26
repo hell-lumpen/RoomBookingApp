@@ -1,5 +1,5 @@
 const config = {
-  hostName: 'localhost',
+  hostName: '192.168.1.8',
   port: 8080,
 };
 

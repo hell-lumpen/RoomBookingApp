@@ -39,6 +39,7 @@
     color: #0095DA;
     font-weight: bold;
     font-size: 18px;
+    margin-right: 10px;
 }
 
 .login-button-in-form {
@@ -50,6 +51,30 @@
     align-items: center;
     display: flex;
     cursor: pointer;
+}
+
+.passkey-in-form-button-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.passkey-button-in-form {
+    background: none;
+    border: none;
+    font-family: 'Geologica', sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    align-items: center;
+    display: flex;
+    cursor: pointer;
+    color: black;
+}
+
+.passkey {
+    font-size: 22px;
+    margin-right: 10px;
+    color: black;
 }
 
 .form-container h2 {
@@ -81,6 +106,8 @@ input {
     font-weight: 400;
     font-size: 16px;
     text-align: left;
+    border: 1px solid #333333;
+    box-shadow: none;
 }
 
 .registration-in-form-container p {

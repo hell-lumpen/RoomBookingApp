@@ -72,28 +72,27 @@ const App = key => {
     const setUserClaims = () => {
         const token = localStorage.getItem('token');
         const decoded = jwt_decode(token);
-        console.log(decoded.fullname)
         setUserFullname(decoded.fullname)
     }
 
     const handleFetchError = (error) => {
         if (error.response) {
-            console.error('Error response data:', error.response.data);
             if (error.response.status === 403) {
                 setPopupOpen(true);
                 setRoomDataArray([]);
             } else if (error.response.status === 500) {
-                // Обработка ошибки 500
+                setRoomDataArray([]);
             }
         } else if (error.request) {
-            console.error('No response received');
+            setPopupOpen(true)
         } else {
-            console.error('Error setting up the request:', error.message);
+            setPopupOpen(true)
         }
     };
 
     const fetchRoomData = async () => {
         try {
+            console.log("222")
             const token = localStorage.getItem('token');
             setUserClaims();
 
@@ -107,32 +106,35 @@ const App = key => {
             const startTime = formatDate(currentDate);
             const endTime = formatDate(nextDate);
 
+            console.log("333")
+
             const response = await axios.get(
                 `http://${config.hostName}:${config.port}/api/bookings?startTime=${startTime}&endTime=${endTime}`,
                 // `http://10.10.69.65:8080/api/bookings?startTime=${startTime}&endTime=${endTime}`,
                 { headers }
             );
 
+            console.log("444")
+
             setRoomDataArray(response.data);
             setPopupOpen(false);
             return response.data;
         } catch (error) {
             handleFetchError(error);
-            throw error;
         }
     };
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await fetchRoomData();
-                // Далее можно выполнить дополнительные действия с полученными данными, если это необходимо
-            } catch (error) {
-                // Обработка ошибки, если необходимо
-            }
-        };
+        // const fetchData = async () => {
+        //     try {
+        //         const data = await fetchRoomData();
+        //         // Далее можно выполнить дополнительные действия с полученными данными, если это необходимо
+        //     } catch (error) {
+        //         // Обработка ошибки, если необходимо
+        //     }
+        // };
 
-        fetchData();
+        fetchRoomData();
     }, [dateResponse]);
 
     const todayDayClick = () => {
