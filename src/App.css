@@ -218,10 +218,6 @@ select{
   }
 }
 
-/*
-стили для компонента регистрации
-*/
-
 .popup-container {
   position: fixed;
   top: 0;
@@ -234,4 +230,9 @@ select{
   align-items: center;
   z-index: 100;
   backdrop-filter: blur(10px);
+}
+
+.new-booking-content {
+  width: 80%;
+  max-width: 800px;
 }

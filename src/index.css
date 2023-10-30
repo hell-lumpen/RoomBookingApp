@@ -11,3 +11,21 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+  font-family: 'Geologica', sans-serif;
+  font-weight: 400;
+  font-size: 16px;
+  text-align: left;
+  border: 1px solid #333333;
+  box-shadow: none;
+  -webkit-appearance: none; /* Отключение стандартных стилей */
+  appearance: none;
+}
+

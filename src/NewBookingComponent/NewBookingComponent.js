@@ -1,179 +1,198 @@
-import './NewBookingComponent.css'
-import React, {useEffect, useState} from "react";
-import axios from "axios";
+// NewBookingComponent.js
 
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import './NewBookingComponent.css';
 
-const NewBookingComponent = ({call_function}) => {
+const NewBookingComponent = ({ setNewBookingFormOpen }) => {
   const [audiences, setAudiences] = useState([]);
 
   useEffect(() => {
-    getAudience()
+    fetchAudiences();
   }, []);
 
-
-  const formatDate = (d) => {
+  const formatDate = (date) => {
     const padWithZero = (number) => String(number).padStart(2, '0');
-    const year = d.getFullYear();
-    const month = padWithZero(d.getMonth() + 1);
-    const day = padWithZero(d.getDate());
-    const hour = padWithZero(d.getHours());
-    const minute = padWithZero(d.getMinutes());
+    const year = date.getFullYear();
+    const month = padWithZero(date.getMonth() + 1);
+    const day = padWithZero(date.getDate());
+    const hour = padWithZero(date.getHours());
+    const minute = padWithZero(date.getMinutes());
     return `${year}-${month}-${day}T${hour}:${minute}:00`;
   };
-  const getAudience = () => {
-    const token = localStorage.getItem('token');
 
+  const fetchAudiences = () => {
+    const token = localStorage.getItem('token');
     const headers = {
       Authorization: 'Bearer ' + token,
     };
+
     axios.get(
         `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}/api/room/all`,
-        {headers}
-    ).then(
-        (response) => {
-          const new_array = [];
-          console.log(response.data);
-          response.data.forEach((id, name) => {
-            new_array.push({
-              "id": id.id,
-              "name": id.name
-            });
-          })
+        { headers }
+    )
+        .then(response => {
+          const allRooms = response.data.map(room => ({
+            id: room.id,
+            name: room.name
+          }));
+          setAudiences(allRooms);
+        })
+        .catch(error => {
+          console.error('Error fetching audiences:', error.message);
+        });
+  };
 
-          setAudiences(new_array);
-        }
-    );
-  }
-
-  const acceptBtnClick = () => {
-
+  const handleBookingButtonClick = () => {
     const audience = document.getElementById('select-audience').value;
     const date = document.getElementById('book-date').value;
     const start_time = document.getElementById('book-start-time').value;
     const end_time = document.getElementById('book-end-time').value;
     const description = document.getElementById('book-description').value;
-    if (audience !== 'default' && date !== '' && start_time !== '' && end_time !== '' && description !== '') {
-      // console.log('a', audience);
-      // console.log('a', date);
-      // console.log('a', start_time);
-      // console.log('a', end_time);
-      // console.log('a', description);
-      const token = localStorage.getItem("token");
+
+    if (isValidInput(audience, date, start_time, end_time, description)) {
+      const token = localStorage.getItem('token');
       const headers = {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}`,
         Authorization: 'Bearer ' + token
       };
 
-      let dateParts = date.split('-'); // Разбиваем строку на части
-      let year = parseInt(dateParts[0], 10);
-      let month = parseInt(dateParts[1], 10) - 1; // Месяцы в JavaScript начинаются с 0 (январь - 0, февраль - 1, и так далее)
-      let day = parseInt(dateParts[2], 10);
-
-      const start_date = new Date(year, month, day);
-      const end_date = new Date(start_date);
-
-
-      dateParts = start_time.split(':');
-      start_date.setHours(parseInt(dateParts[0], 10), parseInt(dateParts[1], 10), 0);
-      dateParts = end_time.split(':');
-      end_date.setHours(parseInt(dateParts[0], 10), parseInt(dateParts[1], 10), 0);
-
-      console.log('start', start_date);
-      console.log('end', start_date);
-
-
-      const roomId = audience;
-      console.log(roomId);
-      const userId = 1;
-      const startTime = formatDate(start_date);
-      const endTime = formatDate(end_date);
-      const rRule = null;
-
-      console.log('start', startTime);
-      console.log('end', endTime);
+      const { startTime, endTime } = parseDateTime(date, start_time, end_time);
 
       axios.post(
           `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}/api/bookings`,
-          {
-            // id,
-            roomId,
-            userId,
-            startTime,
-            endTime,
-            description,
-            rRule
-          },
-          {headers},
+          { roomId: audience, startTime, endTime, description, rRule: null },
+          { headers }
       )
-
-
+          .then(response => {
+            console.log('Booking successful:', response.data);
+          })
+          .catch(error => {
+            console.error('Error during booking:', error.message);
+          });
     }
-  }
+  };
+
+  const isValidInput = (audience, date, startTime, endTime, description) => {
+    return audience !== 'default' && date !== '' && startTime !== '' && endTime !== '' && description !== '';
+  };
+
+  const parseDateTime = (date, startTime, endTime) => {
+    const dateParts = date.split('-');
+    const year = parseInt(dateParts[0], 10);
+    const month = parseInt(dateParts[1], 10) - 1;
+    const day = parseInt(dateParts[2], 10);
+
+    const start_date = new Date(year, month, day);
+    const end_date = new Date(start_date);
+
+    const startParts = startTime.split(':');
+    start_date.setHours(parseInt(startParts[0], 10), parseInt(startParts[1], 10), 0);
+
+    const endParts = endTime.split(':');
+    end_date.setHours(parseInt(endParts[0], 10), parseInt(endParts[1], 10), 0);
+
+    return {
+      startTime: formatDate(start_date),
+      endTime: formatDate(end_date),
+    };
+  };
 
   return (
-
-      <div className='new-booking-block-window' id='new-booking-block-window' onClick={(event) => {
-        event.stopPropagation();
-      }}>
-        <div className='new-booking-block-window-container'>
-
-          <div className='info-block'>
-            <strong className='title'>Аудитория:</strong>
+      <div className='new-booking-block-window-container'>
+        <h2>Создание нового бронирования</h2>
+        <form className="new-booking-form">
+          <label className="new-booking-form-label">
+            Аудитория:
             <select id="select-audience">
               <option value='default'>...</option>
-              {audiences.map((element, index) => {
-                return <option key={element.id} value={element.id}>{element.name}</option>
-              })}
+              {audiences.map((room) => (
+                  <option key={room.id} value={room.id}>{room.name}</option>
+              ))}
             </select>
+          </label>
+
+          <div className="new-booking-datetime-container">
+            <div className="new-booking-datetime-element">
+              <label className="new-booking-form-datetime-element-label">
+                Дата бронирования:
+                <input placeholder="" type="date" onChange={(e) => {
+                  // setUsername(e.target.value)
+                }} />
+              </label>
+            </div>
+
+            <div className="new-booking-datetime-element">
+              <label className="new-booking-form-datetime-element-label">
+                Время начала:
+                <input placeholder="" type="time" onChange={(e) => {
+                  // setUsername(e.target.value)
+                }} />
+              </label>
+            </div>
+
+            <div className="new-booking-datetime-element">
+              <label className="new-booking-form-datetime-element-label">
+                Время окончания:
+                <input placeholder="" type="time" onChange={(e) => {
+                  // setUsername(e.target.value)
+                }} />
+              </label>
+            </div>
           </div>
 
-          <div id='date-block' className='info-block'>
-            <strong className='title'>Дата:</strong>
-            <input id='book-date' type='date'/>
+          <label className="new-booking-form-label">
+            Описание:
+            <textarea className="new-booking-form-textarea" placeholder="" onChange={(e) => {
+              // setUsername(e.target.value)
+            }} />
+          </label>
+        </form>
+        {/*<div className='info-block'>*/}
+        {/*  <div className='title'>Аудитория:</div>*/}
+        {/*  <select id="select-audience">*/}
+        {/*    <option value='default'>...</option>*/}
+        {/*    {audiences.map((room) => (*/}
+        {/*        <option key={room.id} value={room.id}>{room.name}</option>*/}
+        {/*    ))}*/}
+        {/*  </select>*/}
+        {/*</div>*/}
 
-          </div>
+        {/*<div className='info-block'>*/}
+        {/*  <div className='title'>Дата:</div>*/}
+        {/*  <input id='book-date' type='date' />*/}
+        {/*</div>*/}
 
-          <div id='date-block' className='info-block'>
-            <strong className='title'>Время начала:</strong>
-            <input id='book-start-time' type='time'/>
-          </div>
+        {/*<div className='info-block'>*/}
+        {/*  <div className='title'>Время начала:</div>*/}
+        {/*  <input id='book-start-time' type='time' />*/}
+        {/*</div>*/}
 
+        {/*<div className='info-block'>*/}
+        {/*  <div className='title'>Время конца:</div>*/}
+        {/*  <input id='book-end-time' type='time' />*/}
+        {/*</div>*/}
 
-          <div id='date-block' className='info-block'>
-            <strong className='title'>Время конца:</strong>
-            <input id='book-end-time' type='time'/>
-          </div>
+        {/*<div className='info-block'>*/}
+        {/*  <div className='title'>Описание:</div>*/}
+        {/*  <input id='book-description' type='text' />*/}
+        {/*</div>*/}
 
-          <div id='date-block' className='info-block'>
-            <strong className='title'>Описание:</strong>
-            <input id='book-description' type='text'/>
-          </div>
-          <div>
-
-
-          </div>
-
-        </div>
-        <div className='new-booking-buttons-container'>
-          <button className='new-booking-buttons-cancel' onClick={() => {
-            console.log('click cancel');
-            call_function(true)
-          }}>Отмена
-          </button>
-          <button className='new-booking-buttons-accept' onClick={() => {
-            console.log('click accept');
-            acceptBtnClick();
-            call_function(true);
-          }}>Бронировать
-          </button>
-        </div>
+        {/*<div className='new-booking-buttons-container'>*/}
+        {/*  <button className='new-booking-buttons-cancel' onClick={() => setNewBookingFormOpen(false)}>*/}
+        {/*    Отмена*/}
+        {/*  </button>*/}
+        {/*  <button className='new-booking-buttons-accept' onClick={() => {*/}
+        {/*    console.log('click accept');*/}
+        {/*    handleBookingButtonClick();*/}
+        {/*    setNewBookingFormOpen(false);*/}
+        {/*  }}>*/}
+        {/*    Забронировать*/}
+        {/*  </button>*/}
+        {/*</div>*/}
       </div>
-
-
   );
-
 }
-
 
 export default NewBookingComponent;

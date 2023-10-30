@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import './App.css';
+import './index.css'
 import BookingRoomComponent from "./RoomContainer/RoomContainer";
 import RoomInfoBlockComponent from "./RoomInfoBlockComponent/RoomInfoBlockComponent";
 import NewBookingComponent from "./NewBookingComponent/NewBookingComponent";
@@ -54,7 +55,7 @@ const App = key => {
 
     const [roomDataArray, setRoomDataArray] = useState([]);
     const [isInfoBlock, setInfoBlock] = useState(true);
-    const [isNewBooking, setNewBooking] = useState(true);
+    const [isNewBookingFormOpen, setNewBookingFormOpen] = useState(false);
     const [infoBlockData, setInfoBlockData] = useState({});
     const [dateResponse, setDateResponse] = useState(new Date());
 
@@ -77,15 +78,15 @@ const App = key => {
     const handleFetchError = (error) => {
         if (error.response) {
             if (error.response.status === 403) {
-                setPopupOpen(true);
+                setAuthFromOpen(true);
                 setRoomDataArray([]);
             } else if (error.response.status === 500) {
                 setRoomDataArray([]);
             }
         } else if (error.request) {
-            setPopupOpen(true)
+            setAuthFromOpen(true)
         } else {
-            setPopupOpen(true)
+            setAuthFromOpen(true)
         }
     };
 
@@ -111,7 +112,7 @@ const App = key => {
             );
 
             setRoomDataArray(response.data);
-            setPopupOpen(false);
+            setAuthFromOpen(false);
             return response.data;
         } catch (error) {
             handleFetchError(error);
@@ -150,14 +151,14 @@ const App = key => {
             'сентября', 'октября', 'ноября', 'декабря'][dateResponse.getMonth()];
     };
 
-    const [isPopupOpen, setPopupOpen] = useState(false);
+    const [isAuthFromOpen, setAuthFromOpen] = useState(false);
 
     const openPopup = () => {
-        setPopupOpen(true);
+        setAuthFromOpen(true);
     };
 
     const closePopup = () => {
-        setPopupOpen(false);
+        setAuthFromOpen(false);
     };
 
     return (
@@ -169,7 +170,7 @@ const App = key => {
                     </button>
                 </div>
                 <AnimatePresence>
-                    {isPopupOpen && (
+                    {isAuthFromOpen && (
                         <motion.div
                             className="popup-container"
                             initial={{ opacity: 0 }}
@@ -204,7 +205,7 @@ const App = key => {
                     </div>
                     <div className="add-booking-button">
                         <button className='new-booking-button-container' onClick={()=>{
-                            setNewBooking(false);
+                            setNewBookingFormOpen(true);
                         }}><span className="material-icons add_circle">add_circle</span>Забронировать</button>
                     </div>
                 </div>
@@ -222,11 +223,27 @@ const App = key => {
                 <RoomInfoBlockComponent data={infoBlockData}/>
             </div>
 
-
-            <div id='new-booking-background-block' className='new-booking-background-block' hidden={isNewBooking} onClick={()=>{setNewBooking(true)}}>
-                <NewBookingComponent call_function={setNewBooking}/>
-            </div>
-
+            <AnimatePresence>
+                {isNewBookingFormOpen && (
+                    <motion.div
+                        className="popup-container"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.1 }}
+                    >
+                    <motion.div
+                        className="new-booking-content"
+                        initial={{ y: "-50%", opacity: 0 }}
+                        animate={{ y: "0%", opacity: 1 }}
+                        exit={{ y: "-50%", opacity: 0.8 }}
+                        transition={{ duration: 0.3, ease: "easeInOut" }}
+                    >
+                        <NewBookingComponent setNewBookingFormOpen={setNewBookingFormOpen}/>
+                    </motion.div>
+                </motion.div>
+            )}
+            </AnimatePresence>
         </div>
 
     );
