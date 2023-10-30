@@ -32,7 +32,7 @@ const NewBookingComponent = ({call_function}) => {
     ).then(
         (response) => {
           const new_array = [];
-          console.log(response.data);
+          // console.log(response.data);
           response.data.forEach((id, name) => {
             new_array.push({
               "id": id.id,
@@ -79,19 +79,19 @@ const NewBookingComponent = ({call_function}) => {
       dateParts = end_time.split(':');
       end_date.setHours(parseInt(dateParts[0], 10), parseInt(dateParts[1], 10), 0);
 
-      console.log('start', start_date);
-      console.log('end', start_date);
+      // console.log('start', start_date);
+      // console.log('end', start_date);
 
 
       const roomId = audience;
-      console.log(roomId);
+      // console.log(roomId);
       const userId = 1;
       const startTime = formatDate(start_date);
       const endTime = formatDate(end_date);
       const rRule = null;
 
-      console.log('start', startTime);
-      console.log('end', endTime);
+      // console.log('start', startTime);
+      // console.log('end', endTime);
 
       axios.post(
           `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}/api/bookings`,
@@ -157,12 +157,12 @@ const NewBookingComponent = ({call_function}) => {
         </div>
         <div className='new-booking-buttons-container'>
           <button className='new-booking-buttons-cancel' onClick={() => {
-            console.log('click cancel');
+            // console.log('click cancel');
             call_function(true)
           }}>Отмена
           </button>
           <button className='new-booking-buttons-accept' onClick={() => {
-            console.log('click accept');
+            // console.log('click accept');
             acceptBtnClick();
             call_function(true);
           }}>Бронировать
