@@ -2,6 +2,8 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import './App.css';
 import './index.css'
+import SockJS from "sockjs-client";
+import Stomp from "stompjs";
 import BookingRoomComponent from "./RoomContainer/RoomContainer";
 import RoomInfoBlockComponent from "./RoomInfoBlockComponent/RoomInfoBlockComponent";
 import NewBookingComponent from "./NewBookingComponent/NewBookingComponent";
@@ -60,6 +62,8 @@ const App = key => {
     const [dateResponse, setDateResponse] = useState(new Date());
 
     const [userFullname, setUserFullname] = useState(null);
+    const [stomp, setStomp] = useState(null);
+    const [newDataAvia, updateNewDataAvia] = useState(false);
 
     const formatDate = (d) => {
         const padWithZero = (number) => String(number).padStart(2, '0');
@@ -111,8 +115,10 @@ const App = key => {
                 { headers }
             );
 
+            console.log('data', response.data);
             setRoomDataArray(response.data);
             setAuthFromOpen(false);
+            console.log('4', roomDataArray);
             return response.data;
         } catch (error) {
             handleFetchError(error);
@@ -130,8 +136,44 @@ const App = key => {
         // };
 
         fetchRoomData();
-    }, [dateResponse]);
+    }, [dateResponse, newDataAvia]);
 
+
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+
+        const headers = {
+            Authorization: 'Bearer ' + token,
+        };
+
+        let sock = new SockJS(`http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}/gs`,
+            {headers}    );
+        let stompClient = Stomp.over(sock);
+        sock.onopen = function () {
+            console.log('open');
+        }
+
+
+        stompClient.connect({}, ()=>{
+                stompClient.subscribe("/topic/1", acceptDataStomp);
+            }
+        );
+
+        setStomp(stompClient);
+        console.log('stomp1', stompClient);
+        console.log('stomp1', stomp);
+
+
+    }, []);
+
+    const connectStomp = () => {
+        console.log('stomp2', stomp);
+        stomp.subscribe("/topic/1", acceptDataStomp);
+    }
+
+    const acceptDataStomp =(data) => {
+        updateNewDataAvia(prevState => !prevState)
+    }
     const todayDayClick = () => {
         setDateResponse(new Date());
         // fetchRoomData();

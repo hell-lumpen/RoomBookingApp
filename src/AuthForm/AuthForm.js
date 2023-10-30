@@ -35,6 +35,7 @@ const AuthForm = ({ onClose, fetchData }) => {
       };
 
       const endpoint = isRegistering ? `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}/api/auth/register` : `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}/api/auth/login`;
+      console.log(endpoint);
       const response = await axios.post(endpoint, { username, password }, {headers});
       if (response.status === 200) {
 
