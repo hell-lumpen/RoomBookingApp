@@ -9,7 +9,6 @@ import {motion, AnimatePresence} from "framer-motion";
 import jwt_decode from 'jwt-decode';
 
 const App = key => {
-    const config = require('./config');
 
     const animationInfoBlock = (div) => {
         setInfoBlock(false);
@@ -92,7 +91,6 @@ const App = key => {
 
     const fetchRoomData = async () => {
         try {
-            console.log("222")
             const token = localStorage.getItem('token');
             setUserClaims();
 
@@ -106,15 +104,11 @@ const App = key => {
             const startTime = formatDate(currentDate);
             const endTime = formatDate(nextDate);
 
-            console.log("333")
-
             const response = await axios.get(
-                `http://${config.hostName}:${config.port}/api/bookings?startTime=${startTime}&endTime=${endTime}`,
+                `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}/api/bookings?startTime=${startTime}&endTime=${endTime}`,
                 // `http://10.10.69.65:8080/api/bookings?startTime=${startTime}&endTime=${endTime}`,
                 { headers }
             );
-
-            console.log("444")
 
             setRoomDataArray(response.data);
             setPopupOpen(false);
@@ -229,7 +223,7 @@ const App = key => {
             </div>
 
 
-            <div id='new-booking-background-block' className='new-booking-background-block' hidden={isNewBooking} onClick={()=>{setNewBooking(true)}} z->
+            <div id='new-booking-background-block' className='new-booking-background-block' hidden={isNewBooking} onClick={()=>{setNewBooking(true)}}>
                 <NewBookingComponent call_function={setNewBooking}/>
             </div>
 

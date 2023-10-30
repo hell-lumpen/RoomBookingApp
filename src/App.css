@@ -84,6 +84,7 @@ input{
 .arrow {
   margin: 0;
   color: #0095DA;
+  font-weight: bold;
 }
 
 .add-booking-button {

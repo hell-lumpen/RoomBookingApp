@@ -8,7 +8,7 @@ function getTime(date){
 }
 
 const BookingRoomComponent = ({funcClickDiv, updateDataInfoBlock, name, bookings}) => {
-    console.log("name: " + name)
+    // console.log("name: " + name)
     return (
         <div>
           {name ? (

@@ -15,8 +15,6 @@ const AuthForm = ({ onClose, fetchData }) => {
     }
   });
 
-  const config = require('../config');
-
   const [isRegistering, setIsRegistering] = useState(false);
   const [successAuth, setSuccessAuth] = useState(true);
 
@@ -33,10 +31,10 @@ const AuthForm = ({ onClose, fetchData }) => {
     try {
       const headers = {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': 'http://localhost:3000',
+        'Access-Control-Allow-Origin': `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}`,
       };
 
-      const endpoint = isRegistering ? `http://${config.hostName}:${config.port}/api/auth/register` : `http://${config.hostName}:${config.port}/api/auth/login`;
+      const endpoint = isRegistering ? `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}/api/auth/register` : `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}/api/auth/login`;
       const response = await axios.post(endpoint, { username, password }, {headers});
       if (response.status === 200) {
 
