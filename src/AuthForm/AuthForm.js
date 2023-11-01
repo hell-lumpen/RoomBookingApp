@@ -70,7 +70,7 @@ const AuthForm = ({ onClose, fetchData }) => {
         {/*  ✖*/}
         {/*</motion.button>*/}
         <motion.h2>
-          {isRegistering ? 'Регистрация' : 'Вход'}
+          {isRegistering ? 'Регистрация в Smart Campus' : 'Вход в Smart Campus'}
         </motion.h2>
         <form>
           { !isRegistering ?

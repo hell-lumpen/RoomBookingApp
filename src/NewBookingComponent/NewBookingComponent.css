@@ -8,6 +8,7 @@
     font-weight: 400;
     font-size: 16px;
     width: 100%;
+    overflow: auto;
 }
 
 .new-booking-block-window-container h2 {
@@ -62,9 +63,15 @@
     font-weight: 400;
     font-size: 16px;
     text-align: left;
-    border: 1px solid #333333;
+    border: 1px solid rgba(175, 175, 175, 0.5);
     box-shadow: none;
     resize: none;
+}
+
+.new-booking-form-textarea:focus {
+    box-shadow: none;
+    outline: none;
+    border: 1px solid rgba(175, 175, 175, 0.5);
 }
 
 

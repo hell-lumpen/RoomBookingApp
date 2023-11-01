@@ -15,17 +15,29 @@ code {
 input,
 select {
   width: 100%;
-  padding: 10px;
   margin-top: 5px;
+  border: 1px solid rgba(175, 175, 175, 0.5);
   margin-bottom: 10px;
   box-sizing: border-box;
   font-family: 'Geologica', sans-serif;
   font-weight: 400;
   font-size: 16px;
   text-align: left;
-  border: 1px solid #333333;
   box-shadow: none;
-  -webkit-appearance: none; /* Отключение стандартных стилей */
+  padding: 10px 10px 10px 15px;
+  -webkit-appearance: none;
   appearance: none;
+  border-radius: 10px;
+}
+
+input:focus,
+select:focus {
+  box-shadow: none;
+  outline: none;
+  border: 1px solid rgba(175, 175, 175, 0.5);
+}
+
+option {
+  text-align: left;
 }
 
