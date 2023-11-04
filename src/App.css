@@ -181,7 +181,7 @@ div {
 }
 
 .Info.state2{
-  animation: toGray 0.4s ease forwards reverse;
+  animation: toGray-reverse 0.4s ease forwards;
 }
 
 @keyframes toGray {
@@ -190,6 +190,17 @@ div {
   }
   to{
     background: rgba(0,0,0,60%);
+  }
+}
+
+@keyframes toGray-reverse {
+  from {
+    background: rgba(0,0,0,60%);
+
+  }
+  to{
+    background: rgba(0,0,0,0);
+
   }
 }
 

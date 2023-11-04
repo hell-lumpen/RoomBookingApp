@@ -1,0 +1,31 @@
+@keyframes main-block-animation {
+    from {
+        transform: translate(0, 0);
+        width: var(--width_block);
+        height: var(--height_block);
+        border-radius: 15px;
+    }
+    to {
+        transform: translate(0, var(--position_y_center));
+        height: 400px;
+        border-radius: 25px;
+    }
+}
+
+@keyframes main-block-animation-reverse {
+
+    from {
+        transform: translate(0, 0);
+        /*width: 400px;*/
+        height: 400px;
+        border-radius: 25px;
+
+    }
+    to {
+        transform: translate(0, calc(var(--old_position_y_center) - var(--pos_y)));
+        width: var(--width_block);
+        height: var(--height_block);
+        border-radius: 15px;
+    }
+}
+
