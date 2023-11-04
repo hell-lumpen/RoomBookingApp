@@ -12,18 +12,40 @@ import {motion, AnimatePresence} from "framer-motion";
 import jwt_decode from 'jwt-decode';
 
 const App = key => {
-
     const animationInfoBlock = (div) => {
         setInfoBlock(false);
-        console.log('target', div);
 
-        const top = document.getElementById(div).offsetTop + 'px';
-        console.log('top', top);
+        // const top = document.getElementById(div).offsetTop + 'px';
+        let top = (window.innerHeight / 2 - document.getElementById(div).getBoundingClientRect().top
+            - 200
+        ) + 'px';
+
+        console.log('divv', document.getElementById(div));
+
+        console.log('count', document.getElementById(div).childElementCount)
+
+        let elementChild = document.getElementById(div).firstElementChild;
+        const time_title = elementChild.lastElementChild.innerHTML;
+        elementChild = elementChild.nextElementSibling;
+        const new_title = elementChild.textContent;
+        elementChild = elementChild.nextElementSibling;
+        const prepod = elementChild.innerHTML;
+
+        document.getElementById('room-info-block-time-container').innerHTML = time_title;
+        document.getElementById('room-info-block-prepod').innerHTML = prepod;
+
 
         document.getElementById('Info-Block').style.pointerEvents = 'auto';
+        document.documentElement.style.setProperty('--old_position_y_center', document.getElementById(div).getBoundingClientRect().top + 'px');
         document.documentElement.style.setProperty('--position_y_center', top);
+        document.documentElement.style.setProperty('--pos_y', (window.innerHeight / 2 - 200) + 'px');
+        document.documentElement.style.setProperty('--width_block', (document.getElementById(div).getBoundingClientRect().width) + 'px');
+        document.documentElement.style.setProperty('--height_block', (document.getElementById(div).getBoundingClientRect().height) + 'px');
+
+        document.documentElement.style.setProperty('--new_title', new_title);
 
         document.getElementById(div).style.opacity = 0;
+
         document.getElementById('room-info-block').classList.remove('state2');
         document.getElementById('Info-Block').classList.remove('state2');
 
@@ -43,15 +65,10 @@ const App = key => {
         // setInfoBlock(true);
         document.getElementById('room-info-block').addEventListener('animationend', eventFunc);
 
-
         document.getElementById('room-info-block').classList.remove('state1');
         document.getElementById('Info-Block').classList.remove('state1');
 
-
-        console.log('asdasd');
-
         document.getElementById('Info-Block').classList.add('state2');
-
         document.getElementById('room-info-block').classList.add('state2');
     }
 
@@ -112,7 +129,7 @@ const App = key => {
             const response = await axios.get(
                 `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}/api/bookings?startTime=${startTime}&endTime=${endTime}`,
                 // `http://10.10.69.65:8080/api/bookings?startTime=${startTime}&endTime=${endTime}`,
-                { headers }
+                {headers}
             );
 
             console.log('data', response.data);
@@ -147,14 +164,14 @@ const App = key => {
         };
 
         let sock = new SockJS(`http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}/gs`,
-            {headers}    );
+            {headers});
         let stompClient = Stomp.over(sock);
         sock.onopen = function () {
             console.log('open');
         }
 
 
-        stompClient.connect({}, ()=>{
+        stompClient.connect({}, () => {
                 stompClient.subscribe("/topic/1", acceptDataStomp);
             }
         );
@@ -171,7 +188,7 @@ const App = key => {
         stomp.subscribe("/topic/1", acceptDataStomp);
     }
 
-    const acceptDataStomp =(data) => {
+    const acceptDataStomp = (data) => {
         updateNewDataAvia(prevState => !prevState)
     }
     const todayDayClick = () => {
@@ -207,7 +224,8 @@ const App = key => {
         <div>
             <div className="App">
                 <div className="login-button-container">
-                    <button className='login-button' onClick={openPopup}><span className="material-icons account_circle">account_circle</span>
+                    <button className='login-button' onClick={openPopup}><span
+                        className="material-icons account_circle">account_circle</span>
                         {userFullname === null ? 'Войти' : userFullname}
                     </button>
                 </div>
@@ -215,19 +233,19 @@ const App = key => {
                     {isAuthFromOpen && (
                         <motion.div
                             className="popup-container"
-                            initial={{ opacity: 0 }}
-                            animate={{ opacity: 1 }}
-                            exit={{ opacity: 0 }}
-                            transition={{ duration: 0.1 }}
+                            initial={{opacity: 0}}
+                            animate={{opacity: 1}}
+                            exit={{opacity: 0}}
+                            transition={{duration: 0.1}}
                         >
                             <motion.div
                                 className="popup-content"
-                                initial={{ y: "-50%", opacity: 0 }}
-                                animate={{ y: "0%", opacity: 1 }}
-                                exit={{ y: "-50%", opacity: 0.8 }}
-                                transition={{ duration: 0.3, ease: "easeInOut" }}
+                                initial={{y: "-50%", opacity: 0}}
+                                animate={{y: "0%", opacity: 1}}
+                                exit={{y: "-50%", opacity: 0.8}}
+                                transition={{duration: 0.3, ease: "easeInOut"}}
                             >
-                                <AuthForm onClose={closePopup} fetchData={fetchRoomData} />
+                                <AuthForm onClose={closePopup} fetchData={fetchRoomData}/>
                             </motion.div>
                         </motion.div>
                     )}
@@ -240,16 +258,20 @@ const App = key => {
                             <span className="material-icons arrow">arrow_back_ios</span>
                         </button>
 
-                        <div onClick={todayDayClick} className='date-container-text'>{['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'][dateResponse.getDay()]}, {dateResponse.getDate()} {getMonth()}</div>
+                        <div onClick={todayDayClick}
+                             className='date-container-text'>{['Воскресенье', 'Понедельник', 'Вторник', 'Среда', 'Четверг', 'Пятница', 'Суббота'][dateResponse.getDay()]}, {dateResponse.getDate()} {getMonth()}</div>
 
-                        <button className='dfds' onClick={() => {nextDayClick()}}>
+                        <button className='dfds' onClick={() => {
+                            nextDayClick()
+                        }}>
                             <span className="material-icons arrow">arrow_forward_ios</span>
                         </button>
                     </div>
                     <div className="add-booking-button">
-                        <button className='new-booking-button-container' onClick={()=>{
+                        <button className='new-booking-button-container' onClick={() => {
                             setNewBookingFormOpen(true);
-                        }}><span className="material-icons add_circle">add_circle</span>Забронировать</button>
+                        }}><span className="material-icons add_circle">add_circle</span>Забронировать
+                        </button>
                     </div>
                 </div>
 
@@ -270,22 +292,22 @@ const App = key => {
                 {isNewBookingFormOpen && (
                     <motion.div
                         className="popup-container"
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.1 }}
+                        initial={{opacity: 0}}
+                        animate={{opacity: 1}}
+                        exit={{opacity: 0}}
+                        transition={{duration: 0.1}}
                     >
-                    <motion.div
-                        className="new-booking-content"
-                        initial={{ y: "-50%", opacity: 0 }}
-                        animate={{ y: "0%", opacity: 1 }}
-                        exit={{ y: "-50%", opacity: 0.8 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                    >
-                        <NewBookingComponent setNewBookingFormOpen={setNewBookingFormOpen}/>
+                        <motion.div
+                            className="new-booking-content"
+                            initial={{y: "-50%", opacity: 0}}
+                            animate={{y: "0%", opacity: 1}}
+                            exit={{y: "-50%", opacity: 0.8}}
+                            transition={{duration: 0.3, ease: "easeInOut"}}
+                        >
+                            <NewBookingComponent setNewBookingFormOpen={setNewBookingFormOpen}/>
+                        </motion.div>
                     </motion.div>
-                </motion.div>
-            )}
+                )}
             </AnimatePresence>
         </div>
 
