@@ -232,7 +232,8 @@ const App = key => {
                         </motion.div>
                     )}
                 </AnimatePresence>
-                <h1>Бронирование аудиторий IT-этажа</h1>
+                {/*<h1>Smart Campus</h1>*/}
+                <h1>Бронирование аудиторий</h1>
                 <div className='control-panel-container'>
                     <div className='date-container-main'>
                         <button className='dfds' onClick={backDayClick}>
