@@ -10,6 +10,7 @@ import NewBookingComponent from "./NewBookingComponent/NewBookingComponent";
 import AuthForm from "./AuthForm/AuthForm";
 import {motion, AnimatePresence} from "framer-motion";
 import jwt_decode from 'jwt-decode';
+import InfoMessageComponent from "./ErrorMessage/InfoMessageComponent";
 
 const App = key => {
     const animationInfoBlock = (div) => {
@@ -128,14 +129,11 @@ const App = key => {
 
             const response = await axios.get(
                 `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}/api/bookings?startTime=${startTime}&endTime=${endTime}`,
-                // `http://10.10.69.65:8080/api/bookings?startTime=${startTime}&endTime=${endTime}`,
                 {headers}
             );
 
-            console.log('data', response.data);
             setRoomDataArray(response.data);
             setAuthFromOpen(false);
-            console.log('4', roomDataArray);
             return response.data;
         } catch (error) {
             handleFetchError(error);
@@ -143,15 +141,6 @@ const App = key => {
     };
 
     useEffect(() => {
-        // const fetchData = async () => {
-        //     try {
-        //         const data = await fetchRoomData();
-        //         // Далее можно выполнить дополнительные действия с полученными данными, если это необходимо
-        //     } catch (error) {
-        //         // Обработка ошибки, если необходимо
-        //     }
-        // };
-
         fetchRoomData();
     }, [dateResponse, newDataAvia]);
 
@@ -220,9 +209,12 @@ const App = key => {
         setAuthFromOpen(false);
     };
 
+    const [infoMessage, setInfoMessage] = useState(null);
+
     return (
         <div>
             <div className="App">
+                <InfoMessageComponent message={infoMessage} setMessage={setInfoMessage}/>
                 <div className="login-button-container">
                     <button className='login-button' onClick={openPopup}><span
                         className="material-icons account_circle">account_circle</span>
@@ -245,12 +237,13 @@ const App = key => {
                                 exit={{y: "-50%", opacity: 0.8}}
                                 transition={{duration: 0.3, ease: "easeInOut"}}
                             >
-                                <AuthForm onClose={closePopup} fetchData={fetchRoomData}/>
+                                <AuthForm onClose={closePopup} fetchBookingData={fetchRoomData} setInfoMessage={setInfoMessage}/>
                             </motion.div>
                         </motion.div>
                     )}
                 </AnimatePresence>
-                <h1>Бронирование аудиторий IT-этажа</h1>
+                <h1>Smart Campus | Кафедра 806</h1>
+                <h3 style={{textAlign: "center"}}>Бронирование аудиторий</h3>
                 <div className='control-panel-container'>
                     <div className='date-container-main'>
                         <button className='dfds' onClick={backDayClick}>

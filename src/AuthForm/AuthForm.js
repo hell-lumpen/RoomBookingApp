@@ -3,8 +3,9 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 
 import './AuthForm.css'
+import InfoMessageComponent from "../ErrorMessage/InfoMessageComponent";
 
-const AuthForm = ({ onClose, fetchData }) => {
+const AuthForm = ({ onClose, fetchBookingData, setInfoMessage }) => {
 
   document.addEventListener('keydown', function(event) {
     if (event.key === 'Enter') {
@@ -16,7 +17,6 @@ const AuthForm = ({ onClose, fetchData }) => {
   });
 
   const [isRegistering, setIsRegistering] = useState(false);
-  const [successAuth, setSuccessAuth] = useState(true);
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -27,31 +27,35 @@ const AuthForm = ({ onClose, fetchData }) => {
     setIsRegistering(!isRegistering);
   };
 
-  const handleSubmit = async () => {
+  const fetchAuthData = async () => {
     try {
       const headers = {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}`,
       };
 
-      const endpoint = isRegistering ? `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}/api/auth/register` : `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}/api/auth/login`;
-      console.log(endpoint);
-      const response = await axios.post(endpoint, { username, password }, {headers});
-      if (response.status === 200) {
+      const endpoint = isRegistering
+          ? `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}/api/auth/register`
+          : `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}/api/auth/login`;
 
+      const response = await axios.post(endpoint, { username, password }, { headers });
+
+      if (response.status === 200) {
         const { token } = response.data;
         localStorage.setItem('token', token);
-
-        fetchData();
-        setSuccessAuth(true)
+        fetchBookingData();
         onClose();
-      } else {
-        console.error(response.data)
-        setSuccessAuth(false);
       }
     } catch (error) {
-      setSuccessAuth(false);
-      console.error('Ошибка во время аутентификации:', error);
+      if (error.response.data.status !== 200) {
+        setPassword('')
+        if (error.response.data.exception_description) {
+          setInfoMessage(error.response.data.exception_description);
+        }
+        else {
+          setInfoMessage('Возникла непредвиденная ошибка');
+        }
+      }
     }
   };
 
@@ -63,12 +67,6 @@ const AuthForm = ({ onClose, fetchData }) => {
           exit={{ y: "-50%", opacity: 0 }}
           transition={{ duration: 0.3, ease: "easeInOut" }}
       >
-        {/*<motion.button*/}
-        {/*    className="close-button"*/}
-        {/*    onClick={onClose}*/}
-        {/*>*/}
-        {/*  ✖*/}
-        {/*</motion.button>*/}
         <motion.h2>
           {isRegistering ? 'Регистрация в Smart Campus' : 'Вход в Smart Campus'}
         </motion.h2>
@@ -85,11 +83,6 @@ const AuthForm = ({ onClose, fetchData }) => {
                   Пароль:
                   <input placeholder="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
                 </label>
-                {!successAuth ? (
-                    <p style={{color: "red", marginBottom: "5px", marginTop: "5px"}}>
-                      Неверное имя пользователя или пароль
-                    </p>
-                ) : null}
               </>
             ) : (
                 <p>
@@ -105,7 +98,7 @@ const AuthForm = ({ onClose, fetchData }) => {
                       id="submitLoginButton"
                       type="button"
                       className="login-button-in-form"
-                      onClick={() => { handleSubmit(); }}
+                      onClick={() => { fetchAuthData(); }}
                   >
                     <span className="material-icons login-icon">login</span> Войти
                   </motion.button>
@@ -115,7 +108,7 @@ const AuthForm = ({ onClose, fetchData }) => {
                       <motion.button
                           type="button"
                           className="passkey-button-in-form"
-                          onClick={() => { handleSubmit();
+                          onClick={() => { fetchAuthData();
                           }}
                       >
                         <span className="material-symbols-outlined passkey">passkey</span> Войти используя Passkey
@@ -124,6 +117,7 @@ const AuthForm = ({ onClose, fetchData }) => {
                 ) : null}
               </>
           ) : null}
+
 
           <div className="registration-in-form-container">
 

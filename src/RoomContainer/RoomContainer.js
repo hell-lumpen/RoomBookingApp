@@ -11,8 +11,6 @@ function getTime(date) {
 }
 
 const BookingRoomComponent = ({funcClickDiv, updateDataInfoBlock, name, bookings}) => {
-    // console.log("name: " + name)
-    const tag = 'Лекция';
     return (
         <div>
             {name ? (
@@ -27,8 +25,8 @@ const BookingRoomComponent = ({funcClickDiv, updateDataInfoBlock, name, bookings
                                 funcClickDiv(booking.id);
                             }}>
                                 <div className='booking-time-tag-container'>
-                                    <div className='booking-tag' id={'tag' + booking.id}>
-                                        {tag}
+                                    <div className='booking-tag' id={'tag' + booking.id}  style={{background: booking.tag.color}}>
+                                        {booking.tag.fullName}
                                     </div>
 
                                     <div className="icon-time-container">
@@ -37,12 +35,12 @@ const BookingRoomComponent = ({funcClickDiv, updateDataInfoBlock, name, bookings
                                         {getTime(new Date(booking.startTime))} - {getTime(new Date(booking.endTime))}
                                     </div>
                                 </div>
-                                <div className="booking-info">Методы оптимизации</div>
-                                {/*<div className="booking-info">{booking.description}</div>*/}
+                                {/*<div className="booking-info">Методы оптимизации</div>*/}
+                                <div className="booking-info">{booking.description}</div>
 
                                 <div className="icon-text-container-person">
                                     <span className="material-icons icon">person</span>
-                                    {booking.username}
+                                    {booking.owner}
                                 </div>
                             </div>
                         ))}

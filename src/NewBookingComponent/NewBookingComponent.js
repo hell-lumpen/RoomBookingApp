@@ -8,10 +8,6 @@ const NewBookingComponent = ({ setNewBookingFormOpen }) => {
   const [audiences, setAudiences] = useState([]);
   const [isPeriodicSettingsOpen, setPeriodicSettingsOpen] = useState(false);
 
-  useEffect(() => {
-    fetchAudiences();
-  }, []);
-
   const formatDate = (date) => {
     const padWithZero = (number) => String(number).padStart(2, '0');
     const year = date.getFullYear();
@@ -22,28 +18,32 @@ const NewBookingComponent = ({ setNewBookingFormOpen }) => {
     return `${year}-${month}-${day}T${hour}:${minute}:00`;
   };
 
-  const fetchAudiences = () => {
-    const token = localStorage.getItem('token');
-    const headers = {
-      Authorization: 'Bearer ' + token,
-    };
+  useEffect(() => {
+    const fetchAudiences = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const headers = {
+          Authorization: 'Bearer ' + token,
+        };
 
-    axios
-        .get(
+        const response = await axios.get(
             `http://${process.env.REACT_APP_API_DEV_HOST}:${process.env.REACT_APP_API_DEV_PORT}/api/room/all`,
             { headers }
-        )
-        .then((response) => {
-          const allRooms = response.data.map((room) => ({
-            id: room.id,
-            name: room.name,
-          }));
-          setAudiences(allRooms);
-        })
-        .catch((error) => {
-          console.error('Error fetching audiences:', error.message);
-        });
-  };
+        );
+
+        const allRooms = response.data.map((room) => ({
+          id: room.id,
+          name: room.name,
+        }));
+
+        setAudiences(allRooms);
+      } catch (error) {
+        console.error('Error fetching audiences:', error);
+      }
+    };
+
+    fetchAudiences();
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -72,7 +72,14 @@ const NewBookingComponent = ({ setNewBookingFormOpen }) => {
         startTime,
         endTime,
         description: newBookingFormData.description,
-        rRule: null,
+        staffId : [1, 2, 3],
+        groupsId : [2, 3],
+        tag: {
+          id : 5,
+          color : '#B8B8B8',
+          full_name : 'Служебное',
+          short_name : 'Служебное'
+        }
       };
 
       console.log(postData);
@@ -87,7 +94,7 @@ const NewBookingComponent = ({ setNewBookingFormOpen }) => {
             console.log('Booking successful:', response.data);
           })
           .catch((error) => {
-            console.error('Error during booking:', error.message);
+            console.error('Error during booking:', error);
           });
     }
   };
