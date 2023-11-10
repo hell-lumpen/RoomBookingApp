@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './NewBookingComponent.css';
 import '../index.css';
+import CustomInputParticipantComponent from "../CustomInputParticipant/CustomInputParticipantComponent";
 
 const NewBookingComponent = ({ setNewBookingFormOpen }) => {
   const [audiences, setAudiences] = useState([]);
@@ -205,7 +206,7 @@ const NewBookingComponent = ({ setNewBookingFormOpen }) => {
                 onChange={handleInputChange}
             />
           </label>
-
+          <CustomInputParticipantComponent/>
           <button
               type='button'
               style={{

@@ -2,6 +2,7 @@ import React from 'react';
 import './RoomContainer.css';
 import { ReactComponent as SheduleSvg } from '../icons/schedule.svg'
 import { ReactComponent as PersonSvg } from '../icons/person.svg'
+import CustomInputParticipantComponent from "../CustomInputParticipant/CustomInputParticipantComponent";
 
 function getTime(date) {
     const hours = String(date.getHours()).padStart(2, '0');
@@ -16,6 +17,7 @@ const BookingRoomComponent = ({funcClickDiv, updateDataInfoBlock, name, bookings
         <div>
             {name ? (
                 <div className="meeting-room">
+                    <CustomInputParticipantComponent/>
                     <h2>{name}</h2>
                     <div className="booking-container">
                         {bookings.map(booking => (
