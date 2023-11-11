@@ -225,16 +225,6 @@ const App = key => {
                         {userFullname === null ? 'Войти' : userFullname + ' (' + userRole + ')'}
                     </button>
                 </div>
-                <Input placeholder="Введите название мероприятия, аудитории или ФИО организатора"
-                       inputValueState={[inputValue, setInputValue]}
-                       type="text"
-                       onChange={(e) => {
-                           setInputValue(e.target.value)
-                       }}
-                       showClearButton={true}
-                       validate={(value) => value.length >= 5} // Пример простой валидации: длина должна быть не менее 5 символов
-                />
-                <div>{inputValue}</div>
                 <AnimatePresence>
                     {isAuthFromOpen && (
                         <motion.div
@@ -280,6 +270,16 @@ const App = key => {
                         </button>
                     </div>
                 </div>
+                <Input placeholder="Введите название мероприятия, аудитории или ФИО организатора"
+                       inputValueState={[inputValue, setInputValue]}
+                       type="text"
+                       onChange={(e) => {
+                           setInputValue(e.target.value)
+                       }}
+                       showClearButton={true}
+                       validate={(value) => value.length >= 5} // Пример простой валидации: длина должна быть не менее 5 символов
+                />
+                {inputValue && (<div>Вы ввели: {inputValue}</div>)}
 
                 {roomDataArray.map((roomData, index) => (
                     <BookingRoomComponent funcClickDiv={animationInfoBlock} updateDataInfoBlock={setInfoBlockData}
