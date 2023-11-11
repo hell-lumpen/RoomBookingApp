@@ -7,10 +7,11 @@ import Stomp from "stompjs";
 import BookingRoomComponent from "./RoomContainer/RoomContainer";
 import RoomInfoBlockComponent from "./RoomInfoBlockComponent/RoomInfoBlockComponent";
 import NewBookingComponent from "./NewBookingComponent/NewBookingComponent";
-import AuthForm from "./AuthForm/AuthForm";
+import AuthForm from "./components/AuthForm/AuthForm";
 import {motion, AnimatePresence} from "framer-motion";
 import jwt_decode from 'jwt-decode';
 import InfoMessageComponent from "./ErrorMessage/InfoMessageComponent";
+import Input from "./utils/components/Input";
 
 const App = key => {
     const animationInfoBlock = (div) => {
@@ -80,6 +81,7 @@ const App = key => {
     const [dateResponse, setDateResponse] = useState(new Date());
 
     const [userFullname, setUserFullname] = useState(null);
+    const [userRole, setUserRole] = useState(null);
     const [stomp, setStomp] = useState(null);
     const [newDataAvia, updateNewDataAvia] = useState(false);
 
@@ -95,6 +97,7 @@ const App = key => {
         const token = localStorage.getItem('token');
         const decoded = jwt_decode(token);
         setUserFullname(decoded.fullname)
+        setUserRole(decoded.role)
     }
 
     const handleFetchError = (error) => {
@@ -210,6 +213,7 @@ const App = key => {
     };
 
     const [infoMessage, setInfoMessage] = useState(null);
+    const [inputValue, setInputValue] = useState('');
 
     return (
         <div>
@@ -218,9 +222,19 @@ const App = key => {
                 <div className="login-button-container">
                     <button className='login-button' onClick={openPopup}><span
                         className="material-icons account_circle">account_circle</span>
-                        {userFullname === null ? 'Войти' : userFullname}
+                        {userFullname === null ? 'Войти' : userFullname + ' (' + userRole + ')'}
                     </button>
                 </div>
+                <Input placeholder="Введите название мероприятия, аудитории или ФИО организатора"
+                       inputValueState={[inputValue, setInputValue]}
+                       type="text"
+                       onChange={(e) => {
+                           setInputValue(e.target.value)
+                       }}
+                       showClearButton={true}
+                       validate={(value) => value.length >= 5} // Пример простой валидации: длина должна быть не менее 5 символов
+                />
+                <div>{inputValue}</div>
                 <AnimatePresence>
                     {isAuthFromOpen && (
                         <motion.div

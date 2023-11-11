@@ -1,5 +1,4 @@
 .new-booking-block-window-container {
-
     position: relative;
     box-sizing: border-box;
     background: white;
@@ -9,8 +8,8 @@
     font-weight: 400;
     font-size: 16px;
     width: 100%;
-    height: 300px;
-    overflow-y: scroll;
+    max-height: 80vh;
+    overflow-y: auto;
 }
 
 .new-booking-block-window-container h2 {
