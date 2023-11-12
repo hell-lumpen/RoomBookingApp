@@ -72,13 +72,14 @@ const ClearButton = styled.button`
 const AutocompleteInput = ({
                              placeholder,
                              type,
-                             inputValueState = ['', () => {}],
+                             inputValueState,
                              onChange,
                              showClearButton,
                              validate,
                              fetchSuggestions,
                              onSelect
                            }) => {
+
   const [inputValue, setInputValue] = inputValueState;
   const [isValid, setValid] = useState(true);
   const [suggestions, setSuggestions] = useState([]);
@@ -133,7 +134,7 @@ const AutocompleteInput = ({
               {suggestions.map((suggestion) => (
                   <SuggestionItem
                       key={suggestion.id}
-                      onClick={() => handleSelectItem(suggestion)} // Изменение обработчика для передачи выбранного объекта
+                      onClick={() => handleSelectItem(suggestion)}
                   >
                     {suggestion.value}
                   </SuggestionItem>

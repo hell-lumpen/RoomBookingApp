@@ -305,7 +305,7 @@ const App = key => {
                            setInputValue(e.target.value)
                        }}
                        showClearButton={true}
-                       validate={(value) => value.length >= 5} // Пример простой валидации: длина должна быть не менее 5 символов
+                       validate={(value) => value.length >= 5}
                 />
                 {inputValue && (<div>Вы ввели: {inputValue}</div>)}
 
@@ -362,7 +362,6 @@ const App = key => {
                 )}
             </AnimatePresence>
         </div>
-
     );
 };
 
