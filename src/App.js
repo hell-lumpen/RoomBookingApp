@@ -12,6 +12,7 @@ import {motion, AnimatePresence} from "framer-motion";
 import jwt_decode from 'jwt-decode';
 import InfoMessageComponent from "./ErrorMessage/InfoMessageComponent";
 import Input from "./utils/components/Input";
+import AutocompleteInput from "./utils/components/AutocompleteInput";
 
 const App = key => {
     const animationInfoBlock = (div) => {
@@ -214,6 +215,33 @@ const App = key => {
 
     const [infoMessage, setInfoMessage] = useState(null);
     const [inputValue, setInputValue] = useState('');
+    const [autocompleteInputValue, setAutocompleteInputValue] = useState('');
+
+    const fetchSuggestions = async (input) => {
+        try {
+            // const response = await fetch(`/api/suggestions?input=${input}`);
+            console.log(input)
+            const data = {
+                "suggestions": [
+                    {"id": 1, "value": "Мероприятие 1 Мероприятие 1 Мероприятие 1 Мероприятие 1 Мероприятие 1 Мероприятие 1 Мероприятие 1 Мероприятие 1 "},
+                    {"id": 2, "value": "Мероприятие 2"},
+                    {"id": 3, "value": "Мероприятие 3"}
+                ]
+            }
+            return data.suggestions; // Предполагается, что сервер возвращает массив объектов с полями id и value
+        } catch (error) {
+            console.error('Error fetching suggestions:', error);
+            return [];
+        }
+    };
+
+    const [selectedItem, setSelectedItem] = React.useState(null);
+
+    // Обработчик выбора объекта из списка
+    const handleSelect = (selected) => {
+        setSelectedItem(selected);
+        console.log('Выбран объект:', selected);
+    };
 
     return (
         <div>
@@ -280,6 +308,24 @@ const App = key => {
                        validate={(value) => value.length >= 5} // Пример простой валидации: длина должна быть не менее 5 символов
                 />
                 {inputValue && (<div>Вы ввели: {inputValue}</div>)}
+
+                <AutocompleteInput
+                    fetchSuggestions={fetchSuggestions}
+                    onChange={(e) => {
+                        setAutocompleteInputValue(e.target.value)
+                    }}
+                    inputValueState={[autocompleteInputValue, setAutocompleteInputValue]}
+                    placeholder='Начни вводить, чтобы получить подсказки'
+                    type='text'
+                    showClearButton={true}
+                    validate={(value) => value.length >= 3}
+                    onSelect={handleSelect}
+                />
+                {selectedItem && (
+                    <div>
+                        Выбран объект: {selectedItem.value} (ID: {selectedItem.id})
+                    </div>
+                )}
 
                 {roomDataArray.map((roomData, index) => (
                     <BookingRoomComponent funcClickDiv={animationInfoBlock} updateDataInfoBlock={setInfoBlockData}
