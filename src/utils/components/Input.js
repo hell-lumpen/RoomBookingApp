@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
 
@@ -73,7 +73,10 @@ const ClearButton = styled.button`
  * @param {Function} props.validate - Функция для валидации введенного значения.
  * @returns {JSX.Element} Компонент Input.
  */
-const Input = ({ placeholder, type, inputValueState = ['', () => {}], onChange, showClearButton, validate }) => {
+const Input = ({
+                 placeholder, type, inputValueState = ['', () => {
+  }], onChange, showClearButton, validate
+               }) => {
   const [inputValue, setInputValue] = inputValueState;
   const [isValid, setValid] = useState(true);
 
@@ -91,7 +94,7 @@ const Input = ({ placeholder, type, inputValueState = ['', () => {}], onChange, 
               onChange(e);
               setValid(validate(inputValue))
             }}
-            style={{ borderColor: isValid ? '#0095DA' : 'red' }}
+            style={{borderColor: isValid ? '#0095DA' : 'red'}}
         />
         {showClearButton && (
             <ClearButton onClick={handleClearClick}>&times;</ClearButton>
