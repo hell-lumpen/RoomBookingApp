@@ -3,7 +3,6 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 
 import './AuthForm.css'
-import InfoMessageComponent from "../../ErrorMessage/InfoMessageComponent";
 
 const AuthForm = ({ onClose, fetchBookingData, setInfoMessage }) => {
 

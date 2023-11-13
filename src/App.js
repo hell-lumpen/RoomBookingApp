@@ -10,9 +10,9 @@ import NewBookingComponent from "./NewBookingComponent/NewBookingComponent";
 import AuthForm from "./components/AuthForm/AuthForm";
 import {motion, AnimatePresence} from "framer-motion";
 import jwt_decode from 'jwt-decode';
-import InfoMessageComponent from "./ErrorMessage/InfoMessageComponent";
 import Input from "./utils/components/Input";
 import AutocompleteInput from "./utils/components/AutocompleteInput";
+import NotificationMessage from "./utils/components/NotificationMessage";
 
 const App = () => {
   const animationInfoBlock = (div) => {
@@ -249,7 +249,7 @@ const App = () => {
   return (
       <div>
         <div className="App">
-          <InfoMessageComponent message={infoMessage} setMessage={setInfoMessage}/>
+          <NotificationMessage message={infoMessage} setMessage={setInfoMessage} messageType={'error'}/>
           <div className="login-button-container">
             <button className='login-button' onClick={openPopup}><span
                 className="material-icons account_circle">account_circle</span>
