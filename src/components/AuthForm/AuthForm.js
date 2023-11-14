@@ -46,6 +46,7 @@ const AuthForm = ({ onClose, fetchBookingData, setInfoMessage }) => {
         onClose();
       }
     } catch (error) {
+      console.log(error)
       if (error.response.data.status !== 200) {
         setPassword('')
         if (error.response.data.exception_description) {
