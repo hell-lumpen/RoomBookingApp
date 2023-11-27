@@ -97,7 +97,7 @@ const App = key => {
     const setUserClaims = () => {
         const token = localStorage.getItem('token');
         const decoded = jwt_decode(token);
-        setUserFullname(decoded.fullname)
+        setUserFullname(decoded.fullName)
         setUserRole(decoded.role)
     }
 
@@ -274,7 +274,7 @@ const App = key => {
                         </motion.div>
                     )}
                 </AnimatePresence>
-                <h1>Smart Campus | Кафедра 806</h1>
+                <h1>Smart Campus МАИ</h1>
                 <h3 style={{textAlign: "center"}}>Бронирование аудиторий</h3>
                 <div className='control-panel-container'>
                     <div className='date-container-main'>

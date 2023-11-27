@@ -15,7 +15,7 @@ const BookingRoomComponent = ({funcClickDiv, updateDataInfoBlock, name, bookings
         <div>
             {name ? (
                 <div className="meeting-room">
-                    <CustomInputParticipantComponent/>
+                    {/*<CustomInputParticipantComponent/>*/}
                     <h2>{name}</h2>
                     <div className="booking-container">
                         {bookings.map(booking => (
@@ -36,7 +36,7 @@ const BookingRoomComponent = ({funcClickDiv, updateDataInfoBlock, name, bookings
                                     </div>
                                 </div>
                                 {/*<div className="booking-info">Методы оптимизации</div>*/}
-                                <div className="booking-info">{booking.description}</div>
+                                <div className="booking-info">{booking.title}</div>
 
                                 <div className="icon-text-container-person">
                                     <span className="material-icons icon">person</span>
