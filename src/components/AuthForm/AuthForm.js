@@ -3,7 +3,6 @@ import axios from 'axios';
 import { motion } from 'framer-motion';
 
 import './AuthForm.css'
-import InfoMessageComponent from "../../ErrorMessage/InfoMessageComponent";
 
 const AuthForm = ({ onClose, fetchBookingData, setInfoMessage }) => {
 
@@ -47,6 +46,7 @@ const AuthForm = ({ onClose, fetchBookingData, setInfoMessage }) => {
         onClose();
       }
     } catch (error) {
+      console.log(error)
       if (error.response.data.status !== 200) {
         setPassword('')
         if (error.response.data.exception_description) {
